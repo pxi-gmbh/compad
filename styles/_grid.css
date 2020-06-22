@@ -349,7 +349,7 @@ button.startStopTimer {
   background: var(--color-background);
   padding: 1em;
   height: 100%;
-  overflow:hidden;
+  overflow: auto;
   display: grid;
   grid-template-rows: auto 1fr;
 }
@@ -362,12 +362,15 @@ button.startStopTimer {
   box-shadow: inset 1px 1px 2px var(--color-shadow), inset -2px -2px 4px var(--color-white);
 }
 #textfieldWriteArea{
-  font-size: 12vw;
+  font-size: calc(2em + 5vw);
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 2.5ch;
   overflow: hidden;
   padding: 0.3em;
-  margin-top: calc(50vw - 1ch);
+  margin-top: 1em;
   border: 2px solid;
   word-wrap: break-word;
   text-align: center;
@@ -412,13 +415,13 @@ button.startStopTimer {
   grid-template-areas: "clock";
 }
 #renderArea .simple-timer-clock {
-  width: 60vw;
-  height: 60vw;
+  width: 50vmin;
+  height: 50vmin;
   grid-area: clock;
   grid-template-areas:
     "clock"
     ".";
-  grid-template-rows: 60vw 1fr;
+  grid-template-rows: 50vmin 1fr;
 }
 
 .simple-timer-clock-middle, .simple-timer-clock-top {
@@ -482,7 +485,7 @@ display: block;
   font-size: 1.2em;
 }
 #renderArea .simple-timer-digital-time {
-  font-size: calc(0.5em + 10vw);
+  font-size: calc(1.5em + 8vmin);
 }
 .simple-timer-big-selection {
   list-style: none;
