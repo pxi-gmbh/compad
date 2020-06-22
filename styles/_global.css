@@ -1,0 +1,75 @@
+/*
+ * GLOBAL STYLES
+ * things that define look of all elements
+ */
+ body {
+   font-size: 1em;
+ }
+a {
+  color: inherit;
+  text-decoration-color: var(--color-contrast);
+  text-underline-position: under;
+  cursor: pointer;
+}
+button,
+input {
+  font-size: 1em;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+}
+.button--primary {
+  color: var(--color-black);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+  padding: 1.5em 2em;
+  border-radius: 4em;
+  border: 1px solid transparent;
+  background-color: var(--color-background);
+  box-shadow: var(--drop-shadow);
+}
+.button--primary:hover {
+  box-shadow: var(--drop-shadow-hover);
+}
+.button--primary:active,
+.button--primary:focus {
+  border: 1px solid currentcolor;
+  background-color: var(--color-contrast);
+}
+.button--secondary {
+  color: var(--color-white);
+  padding: 0.5em 1em;
+  border-radius: 1em;
+  border: 1px solid transparent;
+  background-color: var(--color-black);
+}
+.button--secondary:hover,
+.button--secondary:active,
+.button--secondary:focus {
+  border: 1px solid var(--color-contrast);
+}
+input[type="text"] {
+  padding: 1.5em;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  border-radius: 2em;
+  background-color:var(--color-background);
+  box-shadow: inset 2px 2px 5px var(--color-shadow), inset -5px -5px 10px var(--color-white);
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus{
+  box-shadow: inset 1px 1px 2px var(--color-shadow), inset -1px -1px 2px var(--color-white);
+}
+[type="checkbox"]{
+  width: unset;
+  box-shadow: unset;
+  appearance: checkbox;
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+}

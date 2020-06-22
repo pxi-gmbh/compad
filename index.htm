@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>compad</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- while in DEV, separate styling concerns into stylesheets -->
+    <link rel="stylesheet" href="styles/_reset.css">
+    <link rel="stylesheet" href="styles/_global.css">
+    <link rel="stylesheet" href="styles/_helper.css">
+    <link rel="stylesheet" href="styles/_toggles.css">
+    <link rel="stylesheet" href="styles/_grid.css">
+    <link rel="stylesheet" href="styles/_plenum.css">
+
+    <!--<link rel="stylesheet" href="videoconf.css">-->
+  </head>
+  <body class="state--before-session"><!-- TODO: change legacy name to: .is-offline -->
+  <!-- LANGUAGE SWITCHER: toggles languages via CSS (most performant solution at expense of verbosity in HTML) -->
+  <input role="button" type="radio" id="lang--de" name="language" value="de" style="display:none" checked>
+  <input role="button" type="radio" id="lang--en" name="language" value="en" style="display:none">
+    <header>
+      <div class="intro">
+        <p lang="de"><strong>compad v0.1</strong>. Ein Signal-Panel für Feedback und Austausch in Video-Konferenzen.</p>
+        <p lang="en"><strong>compad v0.1</strong>. A communication pad to give you a feedback channel during video conferences.</p>
+      </div>
+      <div id="language-selector-area">
+        <div><label role="button" for="lang--de" class="button--secondary" tabindex="0">deutsch</label><label role="button" for="lang--en" class="button--secondary" tabindex="0">english</label></div><!-- TODO add accessibility-helper-script to make sure the labels can be navigated and activated with tabindex on keyboards -->
+      </div>
+      <div id="documentation-button-area">
+        <button class="button--secondary" id="documentation-button" onclick="videoconf.showMenu(this,'documentation-menu')">
+          <span lang="en">help</span>
+          <span lang="de">Hilfe</span>
+        </button>
+
+      </div>
+    </header>
+    <!-- SESSION MANAGEMENT - TODO: design functionality
+    <div id="roomnamewrapper">
+      <span>please enter room name</span>
+      <input type="text" id="roomname">
+      <button onclick="videoconf.enterRoom()">enter</button>
+    </div>
+    -->
+    <div id="renderArea" aria-live="polite">
+      <!-- This is the Area where new Buttons and other
+      Elements like Timeline, timer etc. will be
+     brought to life  - take it as your "fullscreen"
+    has z-index -1 on beginning and is rendered in same area as buttons by default
+   -->
+    </div>
+
+<!-- BUTTONS to click -->
+<!-- buttons with functionality
+onclick="videoconf.showButton(this)"
+will be spawned inside renderArea -->
+
+    <!-- expandbutton--area is not needed by default, only for plenum -->
+    <button id="expandbutton--area" onclick="document.body.classList.toggle('buttonarea--minimized');">
+      <span lang="en" class="screenreader-only">show menu</span>
+      <span lang="de" class="screenreader-only">Menü zeigen</span>
+    </button>
+    <div id="localuser">
+      <button id="localusername" onclick="this.parentElement.classList.toggle('editable');document.getElementById('localusernameEditable').focus();">Me</button>
+      <span contenteditable="true" id="localusernameEditable" onfocusout="videoconf.setUserName(this.innerText);this.parentElement.classList.toggle('editable');"></span>
+    </div>
+
+    <ul id="buttonlist">
+        <!-- buttons that are visible on start (in offline-mode) -->
+        <li class="session--off">
+          <button id="buttonA" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich möchte etwas sagen</span>
+            <img src="iconset/need-word.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">das Wort</span>
+             <span lang="en">a word</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonB" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich habe eine Frage</span>
+            <img src="iconset/need-clarification.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Klärung</span>
+             <span lang="en">clari&shy;fication</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonC" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich brauche eine Pause</span>
+            <img src="iconset/need-break.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Pause</span>
+             <span lang="en">a break</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonD" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich brauche mehr Zeit</span>
+            <img src="iconset/need-time.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Zeit</span>
+             <span lang="en">time</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonE" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich check das!</span>
+            <img src="iconset/status-got-it.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">hab's!</span>
+             <span lang="en">got this</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonF" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich liebe es!</span>
+            <img src="iconset/status-love-it.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">super!</span>
+             <span lang="en">love it</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonG" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich bin kurz weg</span>
+            <img src="iconset/status-away.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Moment!</span>
+             <span lang="en">away</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonO" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Entschuldigung, muss mich um etwas kümmern</span>
+            <img src="iconset/status-sorry-preoccupied.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">ups...</span>
+             <span lang="en">sorry!</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonP" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Es kommt kein Ton an</span>
+            <img src="iconset/call-no-sound.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">hör nix</span>
+             <span lang="en">sound?</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonQ" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Du bist eingefroren</span>
+            <img src="iconset/call-frozen.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">steht</span>
+             <span lang="en">frozen</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonR" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Du brichst ab</span>
+            <img src="iconset/call-breaking-up.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">fr…zz</span>
+             <span lang="en">breaking</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonS" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Es gibt Störgeräusche</span>
+            <img src="iconset/call-noise.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Lärm</span>
+             <span lang="en">noise</span>
+          </span>
+        </li>
+
+        <li class="session--off">
+          <button id="buttonT" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Du bist mir zu leise</span>
+            <img src="iconset/call-louder.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">lauter</span>
+             <span lang="en">louder</span>
+          </span>
+        </li>
+
+
+        <!-- buttons that are visible in online-mode (after session-start) -->
+        <li class="session--on">
+          <button id="buttonH" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich möchte etwas sagen</span>
+            <img src="iconset/need-word.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">das Wort</span>
+             <span lang="en">a word</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonI" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich habe eine Frage</span>
+            <img src="iconset/need-clarification.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Klärung</span>
+             <span lang="en">clari&shy;fication</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonJ" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich brauche eine Pause</span>
+            <img src="iconset/need-break.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Pause</span>
+             <span lang="en">a break</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonK" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich brauche mehr Zeit</span>
+            <img src="iconset/need-time.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Zeit</span>
+             <span lang="en">time</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonL" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich check das!</span>
+            <img src="iconset/status-got-it.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">hab's!</span>
+             <span lang="en">got this</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonM" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich liebe es!</span>
+            <img src="iconset/status-love-it.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">super!</span>
+             <span lang="en">love it</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonN" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Ich bin kurz weg</span>
+            <img src="iconset/status-away.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Moment!</span>
+             <span lang="en">away</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonU" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Entschuldigung, muss mich um etwas kümmern</span>
+            <img src="iconset/status-sorry-preoccupied.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Ups...</span>
+             <span lang="en">sorry!</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonV" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Es kommt kein Ton an</span>
+            <img src="iconset/call-no-sound.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">hör nix</span>
+             <span lang="en">no sound?</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonW" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Du bist eingefroren</span>
+            <img src="iconset/call-frozen.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">steht</span>
+             <span lang="en">frozen</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonX" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Du brichst ab</span>
+            <img src="iconset/call-breaking-up.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">fr…zz</span>
+             <span lang="en">breaking</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonY" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Es gibt Störgeräusche</span>
+            <img src="iconset/call-noise.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">Lärm</span>
+             <span lang="en">noise</span>
+          </span>
+        </li>
+
+        <li class="session--on">
+          <button id="buttonZ" class="display-button" onclick="videoconf.showButton(this)">
+            <span class="screenreader-only" lang="de">Du bist mir zu leise</span>
+            <img src="iconset/call-louder.svg">
+          </button>
+          <span class="tooltip">
+            <span lang="de">lauter</span>
+             <span lang="en">louder</span>
+          </span>
+        </li>
+
+        <!-- advanced buttons, which have their own calling-function and are available in both:-->
+        <li>
+        <button id="buttonTextfield" class="display-button" onclick="videoconf.createTextfield()">
+          <p lang="en">text</p>
+          <p lang="de">Text</p>
+        </button>
+        <span class="tooltip">
+          <span lang="de">[...]</span>
+          <span lang="en">[write]</span>
+        </span>
+      </li>
+
+      <li>
+        <button id="button-simple-timer" class="display-button" onclick="videoconf.simpleTimer.showButton(this)">
+          <div class="simple-timer">
+            <div class="simple-timer-clock">
+              <span class="simple-timer-clock-middle"></span>
+              <span class="simple-timer-clock-top"></span>
+            </div>
+            <span class="simple-timer-digital-time">00:00</span>
+            <div class="simple-timer-small-selection"></div>
+            <ul class="simple-timer-big-selection">
+              <!-- here are buttons spawned in when in big-mode -->
+            </ul>
+          </div>
+        </button>
+        <span class="tooltip" style="z-index:100">
+          <span lang="de">Timer</span>
+           <span lang="en">timer</span>
+        </span>
+      </li>
+    </ul>
+
+    <!-- TODO: design functionality -->
+    <section id="controls" class="popup-menu">
+      <button class="display-button" id="showInviteLinks" onclick="videoconf.showInviteLinks();">
+        <span lang="en">start live session</span>
+        <span lang="de">Synchronisation starten</span>
+      </button>
+      <button id="timelineButton" class="minimized" onclick="videoconf.createTimeline()">
+        <span lang="en">new timeline</span>
+        <span lang="de">Zeitleiste hinzufügen</span>
+      </button>
+      <button id="speakersListButton" class="minimized" onclick="videoconf.createSpeakersList()">
+        <span lang="de">Redeliste hinzufügen</span>
+        <span lang="en">add a speakers list</span>
+      </button>
+      <!-- USER MANAGEMENT -->
+          <div id="userlistArea">
+            <div id="usernamewrapper">
+              <span>please enter username</span>
+              <input type="text" id="username">
+              <button onclick="videoconf.enterUsername()">enter</button>
+            </div>
+            <h2>userlist</h2>
+            <button id="userlisthidebutton" onclick="document.getElementById('userlistArea').classList.toggle('hidden')">&gt;</button>
+            <ul id="userlist"> </ul>
+          </div>
+     <!-- only used in plenum-mode -->
+          <div id="plenumtimer" class="timerbutton display-button">
+            <input type="text" name="" value="Timer" id="timertitle">
+            <select id="timerminutes" class="" name="">
+              <option value="0">0 min</option>
+              <option value="1">1 min</option>
+              <option value="2">2 min</option>
+              <option value="3">3 min</option>
+              <option value="4">4 min</option>
+              <option value="5">5 min</option>
+              <option value="6">6 min</option>
+              <option value="7">7 min</option>
+              <option value="8">8 min</option>
+              <option value="9">9 min</option>
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+              <option value="20">20 min</option>
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+              <option value="60">60 min</option>
+            </select>
+            <select id="timerseconds" class="" name="">
+              <option value="0">0 sec</option>
+              <option value="15">15 sec</option>
+              <option value="30">30 sec</option>
+              <option value="45">45 sec</option>
+            </select>
+            <button id="buttonTimer" onclick="videoconf.addTimer()">Add Timer</button>
+          </div>
+
+    </section>
+    <section id="about-us" class="popup-menu">
+      <div lang="de">
+        <h3>Besser virtuell arbeiten</h3>
+        <p><i>compad</i> entwickeln wir, weil wir es brauchen: Vor der Krise haben wir Premium-Workshops zu Strategie-Findung und Gestaltung angeboten. Die mussten wir nun für den virtuellen Einsatz adaptieren.</p>
+        <p>Wir veröffentlichen unsere Erfahrungen als vernetzt arbeitende, kleine Agentur in einem <a href="https://leitfaden-fernarbeit.de">Leitfaden</a>. Außerdem bieten wir Beratung und Gestaltungs-Lösungen an. Sollen wir mal zeigen, wie schick und hilfreich dabei virtuelle Workshops aussehen können?</p>
+        <form id="cta-form--de" action="https://mail.pxi.gmbh/sendy/subscribe" method="POST" accept-charset="utf-8">
+          <div>
+            <label for="email"><strong>E-Mail für Updates:</strong><input placeholder="E-Mail-Adresse" type="text" name="email" id="email" required /></label>
+            <div class="">
+              <br>
+              <input class="button--primary" type="submit" name="submit" id="submit" value="Updates erhalten"/>
+            </div>
+            <label for="gdpr" class="">
+              <p><input type="checkbox" name="gdpr" id="gdpr" required checked="checked"/> Ich möchte über Werkzeuge und Methoden für produktive Zusammen-Arbeit informiert bleiben. Ich kann Benachrichtigungen jederzeit mit einem Klick abstellen und finde voll gut, wie ernst pxi&thinsp;❘&thinsp;Agentur Datenschutz nimmt.</p>
+            </label>
+            <p>Daten-Souveränität. So wichtig: <a href="https://agentur.pxi.gmbh/rechtliches.html#datenschutz" target="_blank">[kein Tracking über fremde Server, keine dritten Parteien, kein Quatsch]</a></p>
+            <!-- TODO Hinweis und Link: Hier ein früherer Beitrag als Beispiel -->
+          </div>
+          <div style="display:none;">
+            <label for="hp">HP</label><br/>
+            <input type="text" name="hp" id="hp"/>
+          </div>
+          <input type="hidden" name="list" value="tLMHj18gjTtoekiSNSwKog"/>
+          <input type="hidden" name="subform" value="yes"/>
+          <input type="hidden" name="+werkzeuge" value="true"/>
+          <input type="hidden" name="-lp-compad" value="true"/>
+        </form>
+      </div>
+      <div lang="en">
+        <h3>for better virtual collaboration</h3>
+        <p><i>compad</i> is a tool we developed for our own needs: We used to offer premium in-house workshops for strategy and design in Germany. During the corona pandemic we had to adapt those workshops to work in virtual environments.</p>
+        <p>We hope you'll enjoy this little gizmo and the other tools we're working on to tackle different needs of remote work. Please get in touch about consultancy services and sign up to learn more about what is remotely possible. Ha.</p>
+        <form id="cta-form--en" action="https://mail.pxi.gmbh/sendy/subscribe" method="POST" accept-charset="utf-8">
+          <div>
+            <label for="email"><strong>E-Mail:</strong><input type="text" name="email" id="email" required /></label>
+            <div>
+              <input class="button--primary" type="submit" name="submit" id="submit" value="get updates"/>
+            </div>
+            <label for="gdpr" class="">
+              <p><input type="checkbox" name="gdpr" id="gdpr" required checked="checked"/> I want to receive updates about tools and methods for better collaboration. I can cancel at any time and respect how much pxi&thinsp;❘&thinsp;innovation&thinsp;lab respects privacy.</p>
+            </label>
+            <p>We encourage and practice data sovereignty: let's minimize data use to the bare functional necessities [no third parties involved, no nonsense]</p>
+            <!-- TODO Hinweis und Link: Hier ein früherer Beitrag als Beispiel -->
+          </div>
+          <div style="display:none;">
+            <label for="hp">HP</label><br/>
+            <input type="text" name="hp" id="hp"/>
+          </div>
+          <input type="hidden" name="list" value="C7cicTf10KLZvNmzJYB9jw"/>
+          <input type="hidden" name="subform" value="yes"/>
+        </form>
+      </div>
+    </section>
+    <section id="documentation-menu" class="popup-menu">
+      <section lang="de">
+        <h3>Dokumentation</h3>
+        <p>Was ist <i>compad</i>? Eine Beta-Version unserer Companion-App für Video-Konferenzen.</p>
+        <p>Kostenlos. Weil wir alle bessere Konferenzen brauchen können. Unterstützung?</p>
+        <p class="button--secondary"><a href="https://gum.co/YbRDN">Icon-Set (erweitert) und Anleitung kaufen (8€)</a></p>
+      </section>
+      <section lang="en">
+        <h3>Documentation</h3>
+        <p>A lot of useful stuff</p>
+
+        <h4>How shared meta-workspaces for conference calls work</h4>
+
+        <p>Each room comes to life in two steps:</p>
+<!-- TODO translate/adapt graphics and text from teletype.atom.io for our explanation -->
+<!--
+ open a portal. then disconnect servers after handshake: privacy.
+        First you connect to our servers to see who is collaborating. 👋   Hi there.
+
+        After that, collaborators share code directly with each other (peer-to-peer).
+        There's no centralized server to spy on you, and Teletype uses WebRTC to encrypt all communication between collaborators.
+        What happens in the prtal stays in the portal.
+-->
+
+      </section>
+    </section>
+
+    <section id="invite-link-menu" class="popup-menu">
+      <div lang="en">
+        <p>Send this link to everyone who should join a shared work space.</p>
+        <p>While a session is running, all interactions on the compad will sync to the other participants. You can embed the session in a running presentation or live stream and control it from a mobile device.</p>
+      </div>
+      <div lang="de">
+        <p>Diesen Link bitte mit allen teilen, die an der gleichen Sitzung teilnehmen sollen.</p>
+        <p>Während einer laufenden Sitzung werden alle Interaktionen auf dem compad an alle anderen Teilnehmenden synchronisiert. Damit können Sitzungen in Präsentationen oder Live-Streams eingebunden werden und dabei mit einem mobilen Gerät gesteuert werden.</p>
+      </div>
+      <div id="session-ID"></div>
+      <button class="button--secondary" onclick="videoconf.copylink(this)">
+        <span lang="en">copy link</span>
+        <span lang="de">Link kopieren</span>
+      </button>
+    </section>
+
+    <!-- Session/Sharing Elements -->
+    <section id="awaiting-session" class="popup-menu">
+      please wait... connecting to server, creating a session...
+    </section>
+    <section id="response-message" class="popup-menu">
+      <span lang="en">please wait... connecting to server, creating a session...</span>
+      <span lang="de">einen Moment, bitte... baue Verbindung auf...</span>
+    </section>
+    <button id="expandbutton--controls" class="button--primary" onclick="videoconf.showMenu(this,'controls')">
+      <span lang="en">controls</span>
+      <span lang="de">kontrollmenü</span>
+    </button>
+    <button id="start-session" class="button--primary" onclick="videoconf.createSession(); document.getElementById('timelineButton').classList.remove('minimized'); document.getElementById('speakersListButton').classList.remove('minimized');">
+      <span lang="en">start session</span>
+      <span lang="de">Sitzung starten</span>
+    </button>
+
+    <footer>
+
+
+      <div class="imprint">
+        <p lang="de">Gratis. Open Source. Von <a href="https://agentur.pxi.gmbh">pxi&thinsp;❘&thinsp;Agentur</a> (Impressum).</p>
+        <p lang="en">Free. Open Source. By <a href="https://pixelcraft.pub">pxi&thinsp;❘&thinsp;design&thinsp;lab</a> (imprint).</p>
+      </div>
+      <button class="button--secondary" id="expandbutton--about" onclick="videoconf.showMenu(this,'about-us')">
+        <span lang="en">learn more about better virtual collaboration</span>
+        <span lang="de">mehr über verbesserte virtuelle Arbeit lernen</span>
+      </button>
+
+    </footer>
+    <script language="javascript" src="videoconf.js"></script>
+    <script language="javascript" src="templates.js"></script>
+    <script language="javascript" src="helper.js"></script>
+  </body>
+</html>

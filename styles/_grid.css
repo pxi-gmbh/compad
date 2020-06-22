@@ -1,0 +1,546 @@
+/*
+  * GRID
+  */
+body {
+  display: grid;
+  /* TODO: clarify "buttonarea is also renderArea" */
+  grid-template-areas:
+    "header header"
+    ". ." /* left empty */
+    "mainarea rightarea"
+    "startbutton rightarea"
+    "footer footer";
+  grid-template-rows: auto 0vh 1fr 0vh auto;
+  grid-template-columns: 1fr auto; /* TODO: check if second column is even needed. perhaps define a wholly different grid for other use cases */
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+@media screen and (orientation: portrait){
+  body {
+    overflow-y: auto;
+  }
+}
+body.is-offline,
+body.state--before-session /* TODO:legacy name */{
+  grid-template-rows: auto auto 1fr auto auto;
+  grid-template-columns: 1fr auto;
+}
+
+header {
+  grid-area: header;
+  width: 100%;
+  height: 100%;
+  padding: 0 1em;
+  align-self: end;
+  display: grid;
+  grid-template-areas:
+      "intro intro"
+      "language help";
+  grid-template-columns: auto 1fr;
+}
+.intro {
+  grid-area: intro;
+  text-align: center;
+  padding: 1em;
+  display: none;
+}
+.is-offline .intro,
+.state--before-session header .intro /* TODO legacy name */{
+  display: block;
+}
+.toggle-language,
+#language-selector-area /* TODO legacy name */{
+  grid-area: language;
+  min-width: 50vw; /* let this expand to fill available screen */
+  text-align: left;
+  display: none;
+}
+.is-offline .toggle-language,
+.state--before-session #language-selector-area /* TODO legacy name */{
+  display: block;
+}
+.toggle-help,
+#documentation-button-area /* TODO legacy name */{
+  grid-area: help;
+  text-align: right;
+}
+footer {
+  grid-area: footer;
+  align-self: end;
+  padding: 0 2em;
+  text-align: center;
+}
+.imprint {
+  text-align: center;
+  padding: 1em;
+  display: none;
+}
+.is-offline .imprint,
+.state--before-session footer .imprint /* TODO legacy name */{
+  display: inline-block;
+}
+
+/* STAGE FOR FULLSCREEN */
+#stage-front,
+#renderArea /* TODO:legacy name */ {
+  position: fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  overflow: hidden;
+  z-index: -1; /* is hidden until content is spawned */
+}
+.is-shown #stage-front,
+.js--state--show-renderArea #renderArea /* TODO:legacy name */{
+  display: grid;
+}
+.popup-menu {
+  display:none;
+  min-width: 20em;
+  max-width: 50em;
+  height: 100%;
+  margin-left: 5vw;
+  margin-right: 5vw;
+}
+#renderArea .popup-menu{
+  display:block;
+}
+#renderArea #controls{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25ch, 1fr));
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+  grid-gap: 10%;
+}
+
+
+/* STAGE FOR BUTTONS */
+#session-start,
+#start-session /* TODO legacy name */{
+  display: none;
+  grid-area: startbutton;
+  justify-self: center;
+  width: max-content;
+}
+.is-offline #session-start,
+.state--before-session #start-session /* TODO legacy name */{
+  display: grid;
+}
+#expandbutton--controls {
+  display: none; /*TODO: style menu */
+  grid-area: startbutton;
+  justify-self: center;
+  width: max-content;
+}
+.is-offline #menu--toggle,
+.state--before-session #expandbutton--controls /* TODO legacy name */{
+  display: none;
+}
+.state--before-session #showInviteLinks {
+  display: none;
+}
+
+
+/*#expandbuttonarea is only used in plenum-mode*/
+#expandbutton--area{
+  display:none; /*not needed in simplemode*/
+}
+/*buttonlist simple-mode */
+#buttonlist {
+  grid-area: mainarea;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-self: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 3vh;
+  padding: 0;
+  z-index: 0;
+  list-style: none;
+}
+/* --- put media-querys last so they overwrite*/
+@media screen and (orientation: portrait){
+  #buttonlist {
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1em;
+    padding: 0;
+  }
+}
+#buttonlist li {
+  position: relative;
+}
+
+.display-button {
+  width: calc((60 - 10) / 3 * 1vh);
+  height: calc((60 - 10) / 3 * 1vh);
+  border: none;
+  border-radius: 15%;
+  padding: 0;
+  color: var(--color-black);
+  background-color: var(--color-background);
+  box-shadow: var(--drop-shadow);
+  transition: all 0.1s ease-in;
+}
+@media screen and (orientation: portrait){
+  .display-button {
+    width: calc(30vw - 2em);
+    height: calc(30vw - 2em);
+    max-width: 12vh;
+    max-height: 12vh;
+  }
+}
+.display-button:hover {
+  box-shadow: var(--drop-shadow-hover);
+}
+.display-button img {
+    width: 100%;
+    padding: 10%;
+}
+
+.tooltip{
+  visibility: hidden;
+  background-color: var(--color-black);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px; /* Defines tooltip text position */
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  margin-left: -100%;
+  opacity: 0;
+  transition: opacity ease-out 0.2s;
+  pointer-events: none;
+  box-shadow: var(--drop-shadow);
+}
+.tooltip::after{
+  content: " ";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color-black) transparent transparent transparent;
+}
+#buttonlist button:hover ~ .tooltip,
+#buttonlist button:focus ~ .tooltip,
+#buttonlist button:active ~ .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.state--before-session .session--on,
+.session--off{
+  display:none;
+}
+.state--before-session .session--off,
+.session--on{
+  display:block;
+}
+
+
+/* all fullscreenelements - fullscreen by default
+ * priority via z-index in plenum
+ */
+ .fullscreenbutton,
+ .menu {
+     width: 100%;
+     height: 100%;
+     background: var(--color-background);
+     grid-column:1/-1;
+     grid-row:1/-1;
+     display: grid;
+     /*grid-template-rows are only valid if we keep always a title
+     to button. so first row is the title, the second is content:*/
+     grid-template-rows: auto 1fr;
+ }
+
+ .fullscreenbutton .content {
+   display: grid;
+   justify-items: center;
+   align-items: center;
+   /*firefox needed more:*/
+   grid-template-areas: "image";
+   grid-template-rows: 1fr;
+ }
+
+ .fullscreenbutton .content img {
+     height: 100%; /* 100% is all available space, which is all without title.
+     so if we put it to % it animates nicely while container
+     changes its size */
+     max-width: 80%;
+     max-height: 80%;
+     grid-area: image;
+ }
+
+#invite-link-menu{
+}
+#session-ID {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.5em;
+  padding: 0.6em 0.8em;
+  margin-bottom: 0.2em;
+  border-radius: 0.4em;
+  background-color: rgba(240,240,240,1);
+  box-shadow: inset 1px 1px 2px var(--color-shadow), inset -2px -2px 4px var(--color-white);
+}
+ .menu{z-index: 100;} /*menu should be over buttons etc.
+ as they only come from user-interaction */
+
+
+
+ /* header of adv. buttons in plenum-mode */
+ /* also header in normal mode of all buttons */
+ /*  a lot of grid-areas are only used in plenum-mode,
+ such as move, expand, start.
+ simple-mode uses only close and maybe title also
+ but isnt bothered neither
+ */
+.button-title {
+  width: 98%;
+  text-align: center;
+  display:grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  grid-template-areas: "move expand title start close";
+}
+.button-title .expandbutton {
+  grid-area: expand;
+  /*TODO find buttons in HTML/JS and attach class .button--secondary */
+}
+.button-title .movebutton {
+  grid-area: move;
+  /*TODO find buttons in HTML/JS and attach class .button--secondary */
+}
+button.startStopTimer {
+  grid-area: start;
+}
+.button-title span {
+  grid-area: title;
+}
+.button-title button {
+  /*TODO find buttons in HTML/JS and attach class .button--secondary */
+}
+.closebutton {
+  grid-area: close;
+  /*TODO find buttons in HTML/JS and attach class .button--secondary */
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  padding: 0;
+  background-color: var(--color-copy);
+  background-image: url("../closebutton.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size:contain;
+  color: transparent;
+}
+
+/* synchronised textfield */
+#textfield {
+  background: var(--color-background);
+  padding: 1em;
+  height: 100%;
+  overflow:hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+#buttonTextfield p {
+  font-family: monospace;
+  font-weight: bold;
+  padding: 0.6em 0.8em;
+  border-radius: 0.4em;
+  background-color: rgba(240,240,240,1);
+  box-shadow: inset 1px 1px 2px var(--color-shadow), inset -2px -2px 4px var(--color-white);
+}
+#textfieldWriteArea{
+  font-size: 12vw;
+  font-weight: bold;
+  height: 2.5ch;
+  overflow: hidden;
+  padding: 0.3em;
+  margin-top: calc(50vw - 1ch);
+  border: 2px solid;
+  word-wrap: break-word;
+  text-align: center;
+  border-radius: 0.4em;
+  background-color:var(--color-background);
+  box-shadow: inset 2px 2px 5px var(--color-shadow), inset -5px -5px 10px var(--color-white);
+}
+#textfieldWriteArea:focus{
+  border: 2px solid transparent;
+  box-shadow: inset 1px 1px 2px var(--color-shadow), inset -1px -1px 2px var(--color-white);
+}
+
+ /* countdown timer */
+ .simple-timer {
+     display: grid;
+     grid-gap: 1vw; /*set a little distance*/
+     align-items: center;
+     justify-items: center;
+ }
+
+ #renderArea .simple-timer {
+  grid-template-columns: 1fr auto;
+  width: 90%; /*get some padding via width*/
+  grid-column: 1 / 4;
+  grid-template-areas:
+    "timer initial"
+    "clock selection";
+  grid-template-rows: auto auto;
+  grid-template-columns: 3fr 1fr;
+  grid-gap: 0.5em 0;
+ }
+
+ #renderArea .simple-timer-small-selection {
+     display: none;
+ }
+.simple-timer-clock {
+  background: rgba(240,240,240,1);
+  width: 3ch;
+  height: 3ch;
+  border-radius: 50%;
+  display: grid;
+  grid-template-areas: "clock";
+}
+#renderArea .simple-timer-clock {
+  width: 60vw;
+  height: 60vw;
+  grid-area: clock;
+  grid-template-areas:
+    "clock"
+    ".";
+  grid-template-rows: 60vw 1fr;
+}
+
+.simple-timer-clock-middle, .simple-timer-clock-top {
+  width: 100%;
+  height: 100%;
+  grid-area: clock;
+  border-radius: 50%;
+  border: 1px solid var(--color-shadow);
+  box-shadow: inset 1px 1px 2px var(--color-shadow), inset -1px -1px 2px var(--color-white);
+}
+
+.simple-timer-clock-top {
+   background-image: linear-gradient(to right, rgba(240,240,240,1) 50%, rgba(0,0,100,0) 50%);
+   z-index: 2;
+}
+.simple-timer-clock-middle{
+ z-index: 1;
+ background-image: linear-gradient(to right, rgba(0,10,10,1) 50%, rgba(0,0,0,0) 50%);
+}
+
+.running .simple-timer-clock-middle{
+ background-image: linear-gradient(to right, rgba(0,10,10,1) 50%, rgba(0,0,0,0) 50%);
+}
+
+.running .simple-timer-clock-middle.js--second-hour{
+ background-image: linear-gradient(to right, rgba(0,10,10,1) 50%, rgba(0,10,10,1.0) 50%);
+}
+
+.simple-timer-clock-top.js--bigger-than-180deg {
+   background-image: linear-gradient(to right, rgba(240,240,240,0) 50%, rgba(0,10,10,1) 50%);
+}
+
+.running .simple-timer-clock-top.js--bigger-than-180deg {
+   background-image: linear-gradient(to right, rgba(240,240,240,0) 50%, rgba(0,10,10,1) 50%);
+}
+.running .simple-timer-clock-top {
+   background-image: linear-gradient(to right, rgba(240,240,240,1) 50%, rgba(0,10,10,0) 50%);
+}
+.running .simple-timer-clock-top.js--bigger-than-180deg.js--second-hour {
+   background-image: linear-gradient(to right, rgba(240,240,240,0) 50%, rgba(0,10,10,1) 50%);
+}
+.running .simple-timer-clock-top.js--second-hour {
+   background-image: linear-gradient(to right, rgba(0,10,10,1) 50%, rgba(0,10,10,0) 50%);
+}
+.selected.simple-timer-select--nr,
+.fullscreen .simple-timer-select--nr,
+.fullscreen #simple-timer-start {
+display: block;
+}
+
+.simple-timer-digital-time {
+  position: relative;
+  width: unset;
+  height: unset;
+  align-self: center;
+  z-index: 10;
+  justify-self: center;
+  text-shadow: 2px 2px 0 var(--color-shadow);
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+#renderArea .simple-timer-digital-time {
+  font-size: calc(0.5em + 10vw);
+}
+.simple-timer-big-selection {
+  list-style: none;
+  display: none;
+}
+#renderArea .simple-timer-big-selection{
+  display: block;
+  grid-area: selection;
+}
+.timer-select--nr.selected {
+  border-left:none; /*TODO: what? */
+}
+.simple-timer-big-selection button {
+  /*TODO find buttons in HTML/JS and attach class .button--secondary */
+  color: var(--color-white);
+  font-size: 1.5em;
+  margin-bottom: 0.25em;
+  padding: 0.5em 0;
+  border-radius: 1em;
+  width: 6ch;
+  border: 1px solid transparent;
+  background-color: var(--color-black);
+  margin-bottom: 0.2em;
+}
+ .simple-timer-big-selection button:hover,
+ .simple-timer-big-selection button:active,
+ .simple-timer-big-selection button:focus {
+   border: 1px solid var(--color-contrast);
+   /*TODO find buttons in HTML/JS and attach class .button--secondary */
+ }
+ .simple-timer.timeover {
+   color:var(--color-alarm);
+ }
+ .simple-timer.timeover .simple-timer-clock-top{
+   border: 0.1em solid var(--color-alarm);
+ }
+
+ @keyframes glow{
+     0%{
+      background-size:0% 0;
+     }
+     50%{
+         background-size:100% 100%
+     }
+     100%{
+         background-size: 0 0;
+     }
+ }
+
+
+
+
+
+
+
+
+ /*things only used in plenum so hide them here:*/
+ #localuser{
+   display:none;
+ }

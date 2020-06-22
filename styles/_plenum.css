@@ -1,0 +1,483 @@
+.mode--plenum .fullscreenbutton,
+.mode--plenum #textfield,
+.mode--plenum .timeline,
+.mode--plenum #speakersList,
+.mode--plenum .timer
+ {
+    width: 100%;
+    height: 100%;
+    grid-row: 1 / -1;
+    grid-column: 1 / -1;
+    margin:0;
+}
+
+.mode--plenum .fullscreen{
+  position: absolute;
+  top:10%;
+  left:10%;
+  width:80%;
+  height:80%;
+  transition: all 1s;
+}
+
+.mode--plenum .fullscreenbutton{z-index: 10;}
+.mode--plenum #textfield{z-index: 9;}
+.mode--plenum .timer{z-index: 8;}
+.mode--plenum #speakersList{z-index: 6;}
+.mode--plenum .timeline{z-index: 5;}
+
+/* speakersList / Redeliste */
+div#speakersList {
+    background: burlywood;
+    width: max-content;
+    border-radius: 5px;
+    text-align: center;
+    font-size: xxx-large;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+}
+
+ul#speakersListUl {
+    list-style: none;
+    margin: 5px;
+    padding: 0;
+    max-height: 100%;
+    overflow: auto;
+}
+
+#speakersListUl li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    border-bottom: 1px dashed rgba(0,0,0,0.4);
+    grid-template-areas:"move title close";
+}
+
+#speakersList button {
+    background: none;
+    border: none;
+    font-size: xxx-large;
+    padding:0;
+}
+
+#speakersListUl .moveup.first{
+  visibility: hidden;
+}
+#speakersList .inputarea {
+    display: grid;
+    grid-template-columns: 1fr;
+    font-size: x-large;
+}
+
+#speakersListUl li span {
+    grid-area: title;
+}
+
+button#speakersListAddMeButton {
+    width: 15ch;
+    background: white;
+    border: 1px solid;
+    font-size: x-large;
+}
+
+input#speakersListInput {
+    font-size: x-large;
+}
+
+/* timeline */
+
+.mode--plenum #timeline,
+.open #timeline {
+    display: grid;
+    align-items: center;
+}
+
+#timeline {
+    display: none;
+}
+/* timescale */
+
+#timelinewrapper{
+  grid-area: rightarea;
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+#timescale {
+    grid-template-rows: repeat(auto-fit, minmax(1px, 1fr));
+    justify-items: center;
+    align-content: center;
+    height: 100%;
+    display: grid;
+}
+
+.minutes-div {
+    width: 5ch;
+    background: black;
+    height: 50%;
+    grid-column: 1;
+    justify-self: end;
+}
+
+.minutes-div.minutes-5 {
+    width: 10ch;
+}
+
+.minutes-div.chapter-0 {
+    background: blue;
+}
+.minutes-div.chapter-1 {
+    background: lawngreen;
+}
+.minutes-div.chapter-2 {
+    background: darkmagenta;
+}
+.minutes-div.chapter-3 {
+    background: goldenrod;
+}
+.minutes-div.chapter-4 {
+    background: cadetblue;
+}
+
+button.toggle-button {
+    position: absolute;
+    width: 5ch;
+    right: 6ch;
+}
+
+.timelineChapter.tlc0 {
+    background: #33ffaa;
+}
+
+.timelineChapter.tlc1 {
+    background: #22aa33;
+}
+
+.timelineChapter.tlc2 {
+    background: #ffaa33;
+}
+
+.timelineChapter.tlc3 {
+    background: #99aaff;
+}
+
+.timelineChapter {
+    text-align: center;
+}
+.timelineMarker {
+    height: 1em;
+    background: rgba(200,0,0,0.3);
+    width: 0;
+}
+
+.over .timelineMarker {
+    width: 100%;
+}
+
+.active .timelineMarker {
+    border-right: 2px solid;
+}
+
+.timelineChapter.timeover {
+    background: red;
+}
+
+/*copied from videoconf.css: */
+.mode--plenum.buttonarea--minimized #buttonlist,
+.mode--plenum.buttonarea--minimized #controls,
+.mode--plenum.buttonarea--minimized #expandbutton--controls,
+.mode--plenum.buttonarea--minimized footer{
+  height: 0;
+  overflow: hidden;
+  /*background-color: red; /* TODO: style properly. this is just to test */
+}
+
+.mode--plenum .display-button { /* the elements that can be toggled to go full-screen */
+  background-color: var(--color-contrast);
+  display: inline-block;
+  width: 15ch;
+  height: 100%;
+}
+.mode--plenum .display-button.active{
+  background-color: blueviolet;
+}
+
+
+.mode--plenum button#expandbutton--area {
+  grid-area: expand;
+  display: block;
+}
+
+.mode--plenum #renderArea{
+  display: grid;
+  grid-area: mainarea;
+  position: unset;
+  grid-template-areas:
+      "user main topics"
+      "user main timer1"
+      "user main speakerslist";
+  grid-template-rows: auto auto 1fr;
+  grid-template-columns: 1fr auto;
+  overflow-y:auto;
+}
+
+.mode--plenum #expandbuttonarea {
+  grid-area: expandbutton;
+  width: 100%;
+  height: 10em;
+  border-radius: var(--border-radius);
+}
+.mode--plenum #expandbuttonarea {
+  display:block;
+}
+/*state buttonarea--minimized is not used in simplemode*/
+.mode--plenum.buttonarea--minimized #expandbuttonarea {
+  height: 2em;
+}
+.mode--plenum #expandbutton--area,
+.mode--plenum #buttonlist,
+.mode--plenum #expandbutton--controls,
+.mode--plenum #controls {
+  background-color: #c0daf5;
+}
+
+.mode--plenum #buttonlist {
+    grid-area: buttonarea;
+    display: grid;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.5s;
+    margin: 0;
+    grid-template-columns: repeat(auto-fit,minmax(10ch,1fr));
+    grid-template-rows: auto;
+    padding: 0;
+    overflow: auto;
+}
+.mode--plenum #controls button{
+  height:100%;
+  min-height:2em;
+}
+
+.mode--plenum footer, .mode--plenum header,
+.mode--plenum #button-simple-timer {
+    display: none;
+}
+
+body.mode--plenum {
+  grid-template-areas:
+    "mainarea"
+    "expand"
+    "localuser"
+    "buttonarea"
+    "moderation";
+  grid-template-rows: 1fr 2vh auto auto auto;
+  grid-template-columns: 1fr;
+  overflow:hidden;
+}
+
+.mode--plenum #controls {
+    grid-area: moderation;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20ch,1fr));
+}
+.mode--plenum.guest #controls{
+  display: none;
+}
+.mode--plenum #localuser{
+  grid-area:"localuser";
+  display:block;
+}
+
+.mode--plenum #plenumtimer {
+    display: inline-grid;
+    grid-template-areas:
+        "title title"
+        "min sec"
+        "submit submit";
+    grid-template-rows: auto auto 1fr;
+    height: 100%;
+}
+
+.mode--plenum #buttonTimer {
+    height: 100%;
+}
+
+.mode--plenum .button-title{
+  margin:0;
+  width: 98%;
+  text-align: center;
+  margin-top: 0;
+  /*border-bottom: 1px solid;*/
+  display:grid;
+  grid-template-columns:auto auto 1fr auto auto;
+  grid-template-areas: "move expand title start close";
+}
+
+.mode--plenum button.closebutton {
+    display: block;
+    position: unset;
+    margin-left: 1ch;
+    padding: 0;
+    margin-top: 0.1em;
+    margin-right: 0.4ch;
+}
+
+/*old timer - only used in plenum-mode*/
+#plenumtimer {
+  display:none;
+}
+
+.mode--plenum .timer .movebutton{
+  display:none;
+}
+.mode--plenum .timer.minimized .movebutton{
+  display:block;
+}
+.mode--plenum .timer span {
+    font-size: xxx-large;
+}
+
+.mode--plenum .timer.minimized {
+    grid-column: 2;
+    width: auto;
+    height:auto;
+    justify-self:end;
+}
+
+.mode--plenum .timer {
+    /*height: auto;
+    width: auto;*/
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    border: 1px solid;
+    /*height: max-content;*/
+    border-radius: 5px;
+    background:#3f51b5;
+    grid-column:1/-1;
+    grid-row:1/-1;
+}
+
+.mode--plenum .timer.timeover{
+  background:red;
+}
+
+
+.mode--plenum .timer span {
+    font-size: calc(10em + 2vw);
+    margin: 5px;
+}
+
+.mode--plenum .timer.minimized span{
+  font-size:xxx-large;
+}
+
+.mode--plenum .timer.minimized button {
+    background: none;
+    border-radius: 10px;
+}
+
+.mode--plenum #timerbutton{
+  display:grid;
+  grid-template-areas:
+    "title title"
+    "min sec"
+    "submit submit";
+  justify-items: center;
+  width:max-content;
+}
+.mode--plenum .timerbutton #timertitle{
+  grid-area:title;
+  width:100%;
+  margin:0;
+  padding:0;
+  text-align: center;
+}
+.mode--plenum #timerminutes{
+  grid-area:min;
+  width:100%;
+}
+.mode--plenum #timerseconds{
+  grid-area:sec;
+  width:100%;
+}
+.mode--plenum #buttonTimer{
+  grid-area:submit;
+  width:100%;
+  padding:0;
+}
+
+.mode--plenum .user-small {
+    width: 40ch;
+    height: 6em;
+    overflow: hidden;
+    border: 1px solid;
+    border-radius: 1ch;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 6em;
+}
+
+.mode--plenum .content img {height: 100%;width: auto;margin: 0;padding: 0;}
+
+.mode--plenum .content {padding: 0;}
+
+
+.mode--plenum #speakersList {
+    grid-area: speakerslist;
+}
+
+.mode--plenum #topics {
+    grid-area: topics;
+    border: 1px solid;
+    border-radius: 1ch;
+    padding: 0 1ch;
+    font-size: xx-large;
+    text-align: center;
+    background: aliceblue;
+}
+
+.mode--plenum #userlist{
+  grid-area:user;
+  list-style: none;
+  display: grid;
+  grid-template-rows:repeat(auto-fit,5em);
+}
+
+.mode--plenum #userlist li{
+  display: grid;
+  grid-template-areas: "username usersymbol";
+  grid-template-columns: auto 1fr;
+  width:40ch;
+}
+.mode--plenum .username{
+  grid-area: username;
+}
+.mode--plenum .usersymbol{
+  grid-area: usersymbol;
+  height:5em;
+}
+.mode--plenum .usersymbol img{
+  height:100%;
+}
+
+.mode--plenum #localuser{
+  display: block;
+  grid-area: localuser;
+}
+
+.mode--plenum #localuser.editable #localusername,
+.mode--plenum #localusernameEditable{
+  display:none;
+}
+
+.mode--plenum #localuser.editable #localusernameEditable{
+  display: block;
+  width:20ch;
+  background:white;
+  color:black;
+}
+
+.mode--plenum .msg-active{ display:none;}
+.mode--plenum .display-button.active .msg-active{
+    display:block;
+}

@@ -1,0 +1,54 @@
+/*
+ * LANGUAGE SWITCHER
+ * toggles languages in UI, assigned in classes, via display-property
+ */
+[lang="de"],
+[lang="en"] {
+   display: none; /* hide all text that has a declared language (English or German) as default */
+ }
+input#lang--de:checked ~ [lang="de"],
+input#lang--de:checked ~ * [lang="de"] {
+  display: inline; /* fallback */
+  display: initial; /* show all text with a declared language of German, if checkbox is ticked (this checkbox is checked by default in the HTML). Apply default display-property for the element */
+}
+[for="lang--de"],
+[for="lang--en"] {
+  display: inline-block;
+  background: none;
+  color: var(--color-copy);
+  border: 1px solid var(--color-shadow);
+}
+[for="lang--de"] {
+  border-radius: 1em 0 0 1em;
+  padding-right: 0.5em;
+}
+[for="lang--en"] {
+  border-radius: 0 1em 1em 0;
+  padding-left: 0.5em;
+}
+input#lang--de:checked ~ * [for="lang--de"] {
+  border: 1px solid var(--color-copy);
+  box-shadow: inset 1px 1px 2px var(--color-shadow), inset -1px -1px 2px var(--color-white);
+}
+input#lang--en:checked ~ * [for="lang--en"] {
+  border: 1px solid var(--color-copy);
+  box-shadow: inset 1px 1px 2px var(--color-shadow), inset -1px -1px 2px var(--color-white);
+}
+input#lang--de:not(:checked) ~ [lang="en"],
+input#lang--de:not(:checked) ~ * [lang="en"] {
+  display: inline; /* fallback */
+  display: initial; /* show all text with a declared language of English, if checkbox is not(!) ticked. Apply default display-property for the element */
+}
+
+
+.js--state--fullscreenbutton-displayed #renderArea{
+  display:grid;
+  z-index: 1;
+}
+#renderArea,
+.js--state--fullscreenbutton-displayed #buttonlist,
+.js--state--fullscreenbutton-displayed header,
+.js--state--fullscreenbutton-displayed.state--before-session #start-session,
+.js--state--fullscreenbutton-displayed footer{
+  display:none;
+}

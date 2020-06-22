@@ -1,0 +1,928 @@
+/*
+ * VIDEOCONF STYLES
+ * All the web-app layout goes here
+ */
+
+/* Screenreader Support: */
+.screenreader-only{
+  position: absolute;
+  width: 1px;
+  height:1px;
+  overflow: hidden;
+  top:-1px;
+}
+
+/*general rules*/
+
+button{
+  cursor:pointer;
+  border-radius: 1em;
+  border-style: none;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  padding: 0.5em 1em;
+  font-size: 0.9rem;
+}
+
+input{
+  font-size: 1.2em;
+  margin:1em 0;
+  border: 0;
+  outline: 0;
+  border-radius: 99999px;
+  padding: 1em 1em 1em 1.5em;
+  background-color:var(--color-background);
+  margin-right: 1em;
+  box-shadow:  inset 2px 2px 5px var(--color-shadow), inset -5px -5px 10px var(--color-white);
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus{
+  box-shadow:  inset 1px 1px 2px var(--color-shadow), inset -1px -1px 2px var(--color-white);
+}
+
+[type="checkbox"]{
+  width: unset;
+  box-shadow: unset;
+  appearance: checkbox;
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+}
+
+
+/*
+  * GRID
+  */
+body {
+  display: grid;
+  /*buttonarea is also renderArea*/
+  grid-template-areas:
+  /*
+    "header header header header"
+    "language . documentation documentation"
+    ". . . ."
+    "buttonarea buttonarea buttonarea timeline"
+    ". startbutton . timeline"
+    "footer footer footer timeline";*/
+    "header header"
+    ". ."
+    "mainarea rightarea"
+    "startbutton rightarea"
+    "footer footer";
+  /*grid-template-rows: 5vh 0vh 1fr 0vh 14vh;*/
+  grid-template-rows: auto 0vh 1fr 0vh auto;
+  grid-template-columns: 1fr auto;
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  font-size: 1.1rem;
+}
+body.state--before-session{
+  /*grid-template-rows: 5vh 17vh 1fr 17vh 14vh;*/
+  grid-template-rows: auto auto 1fr 17vh auto;
+  grid-template-columns: 1fr auto;
+}
+/*
+@screen and (min-width: 40em){
+  body {
+    grid-template-areas:
+      "header         header"
+      "renderarea     agenda"
+      "userlist       userlist"
+      "controls       controls"
+      "expandbutton expandbutton"
+      "buttonarea     buttonarea"
+      "footer         footer";
+    grid-template-rows: auto 1fr auto auto auto auto auto;
+    grid-template-columns: 1fr auto;
+  }
+}
+*/
+
+
+/*renderArea is the div which contains all fullscreenelements:*/
+#renderArea {
+  /*grid-area: mainarea; if we want to only go over the buttons we put it here*/
+  /*else we define grid-lines, other gridareas or position absolute.
+  i prefer grid, so with grid-column, grid-row:*/
+  grid-column:1/-1;
+  grid-row:1/-1;
+  position: fixed;
+  left:0;
+  top:0;
+  display: none;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  z-index: 1;
+
+}
+
+.js--state--show-renderArea #renderArea{
+  display:grid; /*or block?*/
+}
+
+/*
+ * SECTIONS TO DISPLAY METADATA
+ * header (onboarding explanation) & footer (imprint, links)
+ */
+header {
+  grid-area: header;
+  width: 100%;
+  height:100%;
+  align-self:end;
+  /*background-color: #eee;*/
+  display: grid;
+  grid-template-areas:
+      "title title title"
+      "language documentation initial";
+  grid-gap: 0 1em;
+  padding: 1em 7em;
+
+}
+header p {
+    grid-area: title;
+    margin-top:-100%;
+    /*transition: all 1s;*/
+}
+.state--before-session header p{
+  margin-top:10px;
+}
+
+#language-selector-area{
+  grid-area:language;
+  width:max-content;
+  /*margin-left:-100%;*/
+  display: none;
+  align-self: center;
+  /*transition:all 1s;*/
+}
+.state--before-session #language-selector-area{
+  margin-left: 0;
+  display: inline-block;
+}
+#documentation-button-area{
+  grid-area:documentation;
+  align-self:center;
+  /*justify-self:end;
+  padding-right:3ch;*/
+}
+#documentation-button {
+  /*height: 5vh;*/
+}
+footer {
+  grid-area: footer;
+  align-self:end;
+  padding: 1em 7em;
+}
+.state--before-session footer p{
+  display:inline-block;
+}
+footer p{
+  display:none;
+}
+
+/* STAGE FOR BUTTONS */
+#start-session {
+  display:none;
+  grid-area: startbutton;
+  justify-self:center;
+  width:max-content;
+}
+[type="submit"],
+#start-session{
+  font-size: 1em;
+  cursor: pointer;
+  color: var(--color-black);
+  margin: 2.5em 0;
+  padding: 0;
+  width:30ch;
+  height:5em;
+  border: 0;
+  border-radius:999px;
+  outline: 0;
+  background-color: var(--color-background);
+  box-shadow: var(--drop-shadow);
+  transition: all 0.1s ease-in;
+}
+
+[type="submit"]:hover,
+#start-session:hover {
+    box-shadow: var(--drop-shadow-hover);
+  }
+
+.state--before-session #start-session{
+  display:block;
+}
+.state--before-session #showInviteLinks{
+  display:none;
+}
+
+.popup-menu {
+  display:none;
+  min-width: 20em;
+  max-width: 50em;
+  height: 100%;
+  margin-left:5vw;
+  margin-right:5vw;
+}
+#renderArea .popup-menu{
+  display:block;
+}
+#renderArea #controls{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(25ch, 1fr));
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+  grid-gap: 10%;
+}
+/*#expandbuttonarea is only used in plenum-mode*/
+#expandbutton--area{
+  display:none; /*not needed in simplemode*/
+}
+
+
+/*buttonlist simple-mode */
+#buttonlist {
+    grid-area: mainarea;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    /*width: 100%;
+    height: 100%;*/
+    /*width: 100vw;
+    height: 80vw;*/
+    align-content: center;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 3vw 3vw;
+    padding: 0 13vw;
+    z-index: 0;
+    grid-template-rows: 1fr 1fr 1fr;
+    list-style: none;
+}
+#buttonlist li{
+  position: relative;
+}
+
+
+.display-button,
+#controls button {
+    width: calc((60 - 10)/3*1vh);
+    height: calc((60 - 10)/3*1vh);
+    border: none;
+    border-radius: 15%;
+    padding: 0;
+    color: var(--color-black);
+    background-color: var(--color-background);
+    box-shadow: var(--drop-shadow);
+    transition: all 0.1s ease-in;
+}
+.display-button:hover,
+#controls button:hover{
+  box-shadow: var(--drop-shadow-hover);
+}
+
+.display-button img {
+    /*height: 100%;*/
+    width: 100%;
+    /*padding: 10%;*/
+}
+
+#buttonTextfield{
+  font-size: 1em;
+}
+
+.state--before-session .session--on,
+.session--off{
+  display:none;
+}
+.state--before-session .session--off,
+.session--on{
+  display:block;
+}
+
+.tooltip{
+  visibility: hidden;
+ background-color: var(--color-black);
+ color: white;
+ text-align: center;
+ padding: 10px;
+ border-radius: 10px; /* Defines tooltip text position */
+ position: absolute;
+ z-index: 1;
+ width: 100%;
+ /*bottom: 100%;*/
+ /*left: 50%;*/
+ margin-left: -100%;
+ opacity: 0;
+ transition: opacity 0.2s ease-out 1s;
+ pointer-events: none;
+ box-shadow: var(--drop-shadow);
+}
+
+/*#buttonA:hover~.tooltip{
+  visibility: visible;
+  opacity: 1;
+}*/
+#buttonlist li button:hover~.tooltip{
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip::after{
+  content: " ";
+ position: absolute;
+ top: 100%; /* At the bottom of the tooltip */
+ left: 50%;
+ margin-left: -5px;
+ border-width: 5px;
+ border-style: solid;
+ border-color: var(--color-black) transparent transparent transparent;
+}
+
+
+/* all fullscreenelements - fullscreen by default *
+ * priority via z-index in plenum
+ */
+
+ .fullscreenbutton,
+ .menu,
+ #textfield {
+     width: 100%;
+     height: 100%;
+     background: var(--color-background);
+     grid-column:1/-1;
+     grid-row:1/-1;
+     display: grid;
+     /*grid-template-rows are only valid if we keep always a title
+     to button. so first row is the title, the second is content:*/
+     grid-template-rows: auto 1fr;
+
+     /*fullscreen*/
+     /*position: fixed;
+     top:0;*/
+     /*fullscreen shouldnt be declared here but in renderArea
+     so if fullscreen means real fullscreen renderArea should be
+     fullscreen */
+
+ }
+
+ .fullscreenbutton .content {
+   display: grid;
+   justify-items: center;
+   align-items: center;
+   /*firefox needed more:*/
+   grid-template-areas: "image";
+   grid-template-rows:1fr;
+ }
+
+ .fullscreenbutton .content img {
+     height: 100%; /*90vh; 100% is all available space, which is all without title.
+     so if we put it to % it animates nicely while container
+     changes its size */
+     grid-area:image;
+ }
+
+
+ .menu{z-index: 100}; /*menu should be over buttons etc.
+ as they only come from user-interaction */
+
+ /* old-stile*/
+
+
+
+/* header of adv. buttons in plenum-mode */
+/* also header in normal mode of all buttons */
+/*  a lot of grid-areas are only used in plenum-mode,
+such as move, expand, start.
+simple-mode uses only close and maybe title also
+but isnt bothered neither
+*/
+
+.button-title {
+    width: 98%;
+    text-align: center;
+    margin-top: 0;
+    /*border-bottom: 1px solid;*/
+    display:grid;
+    grid-template-columns:auto auto 1fr auto auto;
+    grid-template-areas: "move expand title start close";
+}
+
+.button-title .expandbutton{
+    grid-area:expand;
+}
+.button-title .movebutton{
+  grid-area:move;
+}
+
+button.startStopTimer {
+    grid-area: start;
+}
+
+.button-title span{
+  grid-area:title;
+  font-size: xxx-large;
+}
+.closebutton{
+  grid-area:close;
+  position: relative;
+  top:0.5em;
+  right:0.2em;
+
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  padding: 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.button-title button{
+  border:none;
+  font-size: 1.5em;
+  line-height: 0.85em;
+  margin-left: -3px;
+  margin-top: -3px;
+}
+
+/* simple-timer*/
+.simple-timer {
+    display: grid;
+    /*grid-template-columns: 1fr auto 1fr;*/ /*clock gets its space */
+    grid-gap: 1vw; /*set a little distance*/
+/*    display: flex; //does not work for me - clock is stretched on flex
+    justify-content: space-around;*/
+}
+
+#renderArea .simple-timer {
+  grid-template-columns: 1fr auto;
+    font-size: xx-large;
+    width:80%; /*get some padding via width*/
+    grid-column: 1 / 4;
+    grid-template-rows: auto auto;
+    grid-template-areas: "timer initial" "clock selection";
+    grid-gap: 0.5em 0;
+}
+
+#renderArea .simple-timer-small-selection {
+    display: none;
+}
+
+.simple-timer-clock {
+    background: white;
+    width: 5ch;
+    height: 5ch;
+    border-radius: 50%;
+    display: grid;
+    grid-template-areas: "clock";
+}
+
+#renderArea .simple-timer-clock{
+  width:30vw;
+  height:30vw;
+  grid-area: clock;
+  grid-template-areas: "clock" ".";
+  grid-template-rows: 30vw 1fr;
+  font-family: monospace;
+}
+
+/*for smoother transition: does not work because there is no
+parent-width/height to get
+#renderArea .js--in-transition .simple-timer-clock {
+    width: 100%;
+    padding-top: 100%;
+    height:0;
+}
+*/
+
+
+.simple-timer-clock-middle, .simple-timer-clock-top {
+    width: 100%;
+    height: 100%;
+    grid-area: clock;
+    border-radius: 50%;
+
+    border: 0.1em solid var(--color-black);
+}
+.simple-timer-clock-top{
+  z-index: 2;
+}
+.simple-timer-clock-middle{
+  z-index: 1;
+  background-image: linear-gradient(to right, rgba(0,0,100,1) 50%, rgba(0,0,0,0.0) 50%);
+}
+
+.running .simple-timer-clock-middle{
+  background-image: linear-gradient(to right, rgba(100,0,0,1) 50%, rgba(0,0,0,0.0) 50%);
+}
+
+.running .simple-timer-clock-middle.js--second-hour{
+  background-image: linear-gradient(to right, rgba(0,0,100,1) 50%, rgba(100,0,0,1.0) 50%);
+}
+
+.simple-timer-clock-top.js--bigger-than-180deg {
+    background-image: linear-gradient(to right, rgba(255,255,255,0) 50%, rgba(0,0,100,1) 50%);
+}
+.simple-timer-clock-top {
+    background-image: linear-gradient(to right, rgba(255,255,255,1) 50%, rgba(0,0,100,0) 50%);
+}
+.running .simple-timer-clock-top.js--bigger-than-180deg {
+    background-image: linear-gradient(to right, rgba(255,255,255,0) 50%, rgba(100,0,0,1) 50%);
+}
+.running .simple-timer-clock-top {
+    background-image: linear-gradient(to right, rgba(255,255,255,1) 50%, rgba(100,0,0,0) 50%);
+}
+.running .simple-timer-clock-top.js--bigger-than-180deg.js--second-hour {
+    background-image: linear-gradient(to right, rgba(255,255,255,0) 50%, rgba(0,0,100,1) 50%);
+}
+.running .simple-timer-clock-top.js--second-hour {
+    background-image: linear-gradient(to right, rgba(100,0,0,1) 50%, rgba(100,0,0,0) 50%);
+}
+.selected.simple-timer-select--nr,
+.fullscreen .simple-timer-select--nr,
+.fullscreen #simple-timer-start {
+    display: block;
+}
+
+#renderArea .screenreader-only.simple-timer-digital-time {
+    /*position: unset;*/
+    position: relative;
+    /*grid-area: clock;*/
+    width: unset;
+    height: unset;
+    align-self: center;
+    z-index: 10;
+    justify-self: center;
+    margin-top: 0.7em;
+}
+
+
+.simple-timer-big-selection {
+    list-style: none;
+    font-size: x-large;
+    padding: 6px 5ch 0 0;
+    display: none;
+}
+#renderArea .simple-timer-big-selection{
+  display: block;
+  grid-area: selection;
+}
+
+.timer-select--nr.selected {
+  border-left:none;
+}
+
+.simple-timer-big-selection button {
+    font-size: x-large;
+    border: none;
+    text-transform: uppercase;
+
+    border: none;
+    border-radius: 15%;
+    padding: 0;
+    color: var(--color-black);
+    background-color: var(--color-background);
+    box-shadow: var(--drop-shadow);
+    transition: all 0.1s ease-in;
+
+    padding:0.5em;
+    margin:0.5em;
+}
+
+.simple-timer-big-selection button:hover{
+  box-shadow: var(--drop-shadow-hover);
+}
+
+.simple-timer {
+    align-items: center;
+    justify-items: center;
+}
+.simple-timer.timeover {
+  /*background: radial-gradient(red, transparent);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: glow 5s infinite;*/
+  color:var(--color-alarm);
+}
+.simple-timer.timeover .simple-timer-clock-top{
+  border: 0.1em solid var(--color-alarm);
+}
+
+@keyframes glow{
+    0%{
+     background-size:0% 0;
+
+    }
+    50%{
+        background-size:100% 100%
+    }
+    100%{
+        background-size: 0 0;
+    }
+}
+
+/* timescale */
+
+#timelinewrapper{
+  grid-area: rightarea;
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+#timescale {
+    grid-template-rows: repeat(auto-fit, minmax(1px, 1fr));
+    justify-items: center;
+    align-content: center;
+    height: 100%;
+    display: grid;
+}
+
+.minutes-div {
+    width: 5ch;
+    background: black;
+    height: 50%;
+    grid-column: 1;
+    justify-self: end;
+}
+
+.minutes-div.minutes-5 {
+    width: 10ch;
+}
+
+.minutes-div.chapter-0 {
+    background: blue;
+}
+.minutes-div.chapter-1 {
+    background: lawngreen;
+}
+.minutes-div.chapter-2 {
+    background: darkmagenta;
+}
+.minutes-div.chapter-3 {
+    background: goldenrod;
+}
+.minutes-div.chapter-4 {
+    background: cadetblue;
+}
+
+button.toggle-button {
+    position: absolute;
+    width: 5ch;
+    right: 6ch;
+}
+
+/* timeline */
+
+.mode--plenum #timeline,
+.open #timeline {
+    display: grid;
+    align-items: center;
+}
+
+#timeline {
+    display: none;
+}
+
+.timelineChapter.tlc0 {
+    background: #33ffaa;
+}
+
+.timelineChapter.tlc1 {
+    background: #22aa33;
+}
+
+.timelineChapter.tlc2 {
+    background: #ffaa33;
+}
+
+.timelineChapter.tlc3 {
+    background: #99aaff;
+}
+
+.timelineChapter {
+    text-align: center;
+}
+.timelineMarker {
+    height: 1em;
+    background: rgba(200,0,0,0.3);
+    width: 0;
+}
+
+.over .timelineMarker {
+    width: 100%;
+}
+
+.active .timelineMarker {
+    border-right: 2px solid;
+}
+
+.timelineChapter.timeover {
+    background: red;
+}
+
+/* syncronised textfield */
+
+#textfield {
+    background: papayawhip;
+    padding: 10px;
+    height:100%;
+    overflow:hidden;
+    display: grid;
+    grid-template-rows:auto 1fr;
+}
+
+#textfieldWriteArea{
+  font-size:30vh;
+  max-height:100%;
+  overflow:auto;
+  padding:0.1em;
+  border: 0.02em solid;
+  margin-top:0.07em;
+
+  word-wrap: break-word;
+}
+
+/* speakersList / Redeliste */
+div#speakersList {
+    background: burlywood;
+    width: max-content;
+    border-radius: 5px;
+    text-align: center;
+    font-size: xxx-large;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+}
+
+ul#speakersListUl {
+    list-style: none;
+    margin: 5px;
+    padding: 0;
+    max-height: 100%;
+    overflow: auto;
+}
+
+#speakersListUl li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    border-bottom: 1px dashed rgba(0,0,0,0.4);
+    grid-template-areas:"move title close";
+}
+
+#speakersList button {
+    background: none;
+    border: none;
+    font-size: xxx-large;
+    padding:0;
+}
+
+#speakersListUl .moveup.first{
+  visibility: hidden;
+}
+#speakersList .inputarea {
+    display: grid;
+    grid-template-columns: 1fr;
+    font-size: x-large;
+}
+
+#speakersListUl li span {
+    grid-area: title;
+}
+
+button#speakersListAddMeButton {
+    width: 15ch;
+    background: white;
+    border: 1px solid;
+    font-size: x-large;
+}
+
+input#speakersListInput {
+    font-size: x-large;
+}
+
+/* --- put media-querys last so they overwrite*/
+
+@media only screen and (max-width:1000px){
+  #buttonlist{
+    /*grid-template-columns: repeat(auto-fit, minmax(20ch, 1fr));*/
+    grid-template-columns: repeat(4, minmax(10ch, 1fr));
+    width: 100vw;
+    /*grid-template-rows: repeat(auto-fit, minmax(20ch,1fr));*/
+    grid-gap: 4vw;
+    padding: 0 10vw;
+  }
+}
+
+@media screen and (orientation: portrait){
+/*@media only screen and (max-width:700px){*/
+  #buttonlist{
+    /*grid-template-columns: repeat(auto-fit, minmax(20ch, 1fr));*/
+    grid-template-columns: repeat(3, minmax(10ch, 1fr));
+    width: 100vw;
+    /*grid-template-rows: repeat(auto-fit, minmax(20ch,1fr));*/
+    grid-gap: 5vw;
+    padding: 5vw;
+  }
+  .display-button{
+    width: calc(80/3*1vw);
+    height: calc(80/3*1vw);
+  }
+  #start-session{
+    margin:1em;
+  }
+  header{
+    padding: 1em 1em;
+  }
+  footer{
+    padding: 1em 1em;
+  }
+  .fullscreenbutton .content img {
+     height: unset;
+     width:100%;
+ }
+}
+
+
+/*things only used in plenum so hide them here:*/
+#localuser{
+  display:none;
+}
+
+
+/*temporary:*/
+
+/* disable userListArea temporarily*/
+div#userlistArea {
+    display: none;
+}
+
+/*
+ * USER MANAGEMENT
+ * user list: will not be shown by default
+ * currently DISABLED
+ */
+/*
+div#userlistArea {
+    grid-area: userlist;
+    display:none;
+}
+button#userlisthidebutton {
+    grid-area: hideb;
+}
+.hidden button#userlisthidebutton {transform: scale(-1,1);}
+
+#userlistArea.hidden h2, #userlistArea.hidden ul {
+    display: none;
+}
+#userlistArea.hidden {
+    width: 3ch;
+}
+div#userlistArea {
+    grid-template-areas:
+        "title userlist hideb";
+    display: grid;
+    height: max-content;
+    border: 1px solid;
+    border-radius: 10px;
+}
+button#userlisthidebutton {
+    width: 3ch;
+    justify-self: end;
+}
+*/
+
+/* CHAT */
+/* currently DISABLED */
+/*disable chat:*/
+#chatli{
+  display: none !important;
+}
+/*
+button.chat {
+  grid-column: 1;
+  border-radius: 10px;
+  background: bisque;
+}
+.chat div {
+  font-size: xxx-large;
+}
+
+.chat h3 {
+  border-bottom: 1px dashed;
+  text-align: left;
+}
+.chat.own h3 {
+  text-align: right;
+}
+button.chat.own{
+  background:green;
+}
+*/
