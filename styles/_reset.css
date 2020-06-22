@@ -31,7 +31,7 @@ html{
   font-size: 100%; /* start with browser default (16px) */
   font-size-adjust: 0.42; /* normalize x-height of font */
   font-smoothing: auto; /* antialiased only for white on black to eliminate sub-pixel-rendering */
-  font-feature-settings: "calt" on, "liga" on, "dlig" on, "kern" on; /* add special cases where necessary: e.g. table numbering in tables, swashes in calligraphic headlines */
+  font-feature-settings: "calt" on, "liga" off, "dlig" on, "kern" on; /* add special cases where necessary: e.g. table numbering in tables, swashes in calligraphic headlines */
   text-size-adjust: 100%; /* prevent adjustments of font size after orientation changes in IE and iOS. */
   max-width: 160em; /* declare maximum range of screen size where design works */
 }

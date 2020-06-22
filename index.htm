@@ -501,39 +501,75 @@ will be spawned inside renderArea -->
     </section>
     <section id="documentation-menu" class="popup-menu">
       <section lang="de">
-        <h3>Dokumentation</h3>
-        <p>Was ist <i>compad</i>? Eine Beta-Version unserer Companion-App für Video-Konferenzen.</p>
-        <p>Kostenlos. Weil wir alle bessere Konferenzen brauchen können. Unterstützung?</p>
-        <p class="button--secondary"><a href="https://gum.co/YbRDN">Icon-Set (erweitert) und Anleitung kaufen (8€)</a></p>
+        <h2>Dokumentation</h2>
+        <p><i>compad</i> ist in der frühen Entwicklung - da kommt noch was.</p>
+        <p>Diese Version stellt die Basis-Funktionen und Signale vor. Damit können Menschen parallel zur Video-Konferenz visuell kommunizieren.</p>
+        <ul>
+          <li>Auf mobilen Geräten Feedback und Information über die Webcam anzeigen: Signal auswählen, Bild in die Kamera halten. Eventuell Bildschirm-Helligkeit reduzieren.</li>
+          <li>Damit Information zwischen Geräten synchronisiert, eine <em>Session</em> starten: Wir spielen damit die visuellen Signale über eine virtuelle Webcam in Video-Konferenzen live ein.</li>
+        </ul>
+        <p>Kostenlos. Weil wir alle bessere Konferenzen brauchen können. Unterstützung ist sehr willkommen:</p>
+        <p style="text-align:center;"><a href="https://gum.co/YbRDN"><strong>Erweitertes Icon-Set, Design-Konzept und Anleitung kaufen.</strong> 5€ via Gumroad.</a></p>
+        <p style="text-align:center;"><a href="https://github.com/pxi-gmbh/compad/issues">Fehler, Wünsche und Ideen gemeinsam bei GitHub sammeln.</a></p>
+        </ul>
+        <hr>
+        <h3>Teilen: Status</h3>
+        <p>Wir haben den Symbolen und Botschaften Mehrdeutigkeit mitgegeben. Der Kontext soll prägen können, was ein Signal bedeutet.</p>
+
+        <h3>Teilen: Wünsche & Bedürfnisse</h3>
+        <p>Die Signale sind extra unaufdringlich gestaltet: sich respektvoll mitteilen, ohne andere zu gängeln.</p>
+
+        <h3>Teilen: Technologie-Eindrücke</h3>
+        <p>Die Botschaften über die Technik sind so gestaltet, dass sie keine Annahmen über Problem-Ursachen vorweg nehmen. Aus der Sammlung von individuellen Eindrücken lässt sich schnell ein Problem erkennen.</p>
+
+        <h3>Interaktion: Nachricht & Timer</h3>
+        <p>Es gibt ein Textfeld, um eigene Kurz-Nachrichten zu formulieren. Die Größe ist begrenzt, damit der Inhalt lesbar bleibt, wenn er über eine Webcam geteilt wird.</p>
+        <p>Es gibt einen Timer, der schnelle Zeitmessung wie eine Eieruhr erlaubt. Das ist besonders nützlich für geteilte Zeit-Begrenzungen, wenn die Anzeige in ein laufendes Video-Signal mit virtuellen Webcams übernommen wird.</p>
+
+        <h4>Wie funktionieren geteilte <em>Sessions</em>?</h4>
+        <p>Beim Start einer Session wird eine Verbindung zum Server hergestellt. Der erzeugt eine zufällige URL. Über den entsprechenden Link können weitere Leute in die laufende Session eingeladen werden. Dort werden alle Interaktionen live synchronisiert.</p>
+        <p>Beim Eintritt in eine laufende Session über eine URL stellt unser Server die Verbindung zu den anderen Menschen her, die sich unter dieser URL treffen und Interaktionen austauschen.</p>
       </section>
       <section lang="en">
-        <h3>Documentation</h3>
-        <p>A lot of useful stuff</p>
+        <h2>Documentation</h2>
+        <p><i>compad</i> is still only in version 0.1 - please bear with us.</p>
+        <p>The first milestone establishes a set of signals that people can use to communicate visually on a second screen during video conferences.</p>
+        <ul>
+          <li>Use the app on your mobile device to create visual feedback that you can convey via your webcam. Just hold the phone up to the camera and dim the screen a bit.</li>
+          <li>Use the app in a shared session to sync all interactions from client devices to your device. We use this feature to route visual input into the video feed of the web conference via a virtual webcam.</li>
+        </ul>
+        <p>Free. Because we all can use better virtual experiences right now. You can support development:</p>
+        <p style="text-align:center;"><a href="https://gum.co/YbRDN"><strong>Buy our expanded icon set, design concept and usage guide</strong>. 5€ via Gumroad.</a></p>
+        <p style="text-align:center;"><a href="https://github.com/pxi-gmbh/compad/issues">Track issues, feature requests and ideas on GitHub.</a></p>
+        <hr>
+        <h3>Share: Status</h3>
+        <p>We've imbued some ambiguity on purpose: context should determine meaning.</p>
 
-        <h4>How shared meta-workspaces for conference calls work</h4>
+        <h3>Share: Needs & Wants</h3>
+        <p>The icons and messages are designed to be unintrusive: you can share things you would like for the discussion without imposing on the space of others.</p>
 
-        <p>Each room comes to life in two steps:</p>
+        <h3>Share: Tech Experience</h3>
+        <p>We designed the signals to make no assumptions about where a problem originates. The aggregate of experiences usually narrows the source of the problem down quickly: is it an issue for everyone or just me?</p>
+
+        <h3>Interactions: Message & Time</h3>
+        <p>You will find a text area in which to share messages of your own. This is intentionally limited in size so text remains readably when shared on a webcam.</p>
+        <p>You will also find a basic timer to quickly start and share time limits. This is useful for timeboxing, expecially when routed back into the video signal via virtual webcam.</p>
+
+        <h4>How shared sessions work</h4>
+        <p>When you start a session, you establish a link to our server, giving you a specific URL, unique to you. Share this URL only with people you want to be able to interact with your session. All actions sync.</p>
+        <p>When you join a session through a unique URL, our server connects you to a shared space created at this URL.</p>
 <!-- TODO translate/adapt graphics and text from teletype.atom.io for our explanation -->
-<!--
- open a portal. then disconnect servers after handshake: privacy.
-        First you connect to our servers to see who is collaborating. 👋   Hi there.
-
-        After that, collaborators share code directly with each other (peer-to-peer).
-        There's no centralized server to spy on you, and Teletype uses WebRTC to encrypt all communication between collaborators.
-        What happens in the prtal stays in the portal.
--->
-
       </section>
     </section>
 
     <section id="invite-link-menu" class="popup-menu">
       <div lang="en">
-        <p>Send this link to everyone who should join a shared work space.</p>
+        <p>Send this URL to everyone who should join a shared session.</p>
         <p>While a session is running, all interactions on the compad will sync to the other participants. You can embed the session in a running presentation or live stream and control it from a mobile device.</p>
       </div>
       <div lang="de">
-        <p>Diesen Link bitte mit allen teilen, die an der gleichen Sitzung teilnehmen sollen.</p>
-        <p>Während einer laufenden Sitzung werden alle Interaktionen auf dem compad an alle anderen Teilnehmenden synchronisiert. Damit können Sitzungen in Präsentationen oder Live-Streams eingebunden werden und dabei mit einem mobilen Gerät gesteuert werden.</p>
+        <p>Diese URL bitte mit allen teilen, die an der gleichen Session teilnehmen sollen.</p>
+        <p>Während einer laufenden Session werden alle Interaktionen auf dem compad an alle anderen Teilnehmenden synchronisiert. Damit können Sitzungen in Präsentationen oder Live-Streams eingebunden werden und dabei mit einem mobilen Gerät gesteuert werden.</p>
       </div>
       <div id="session-ID"></div>
       <button class="button--secondary" onclick="videoconf.copylink(this)">
@@ -544,7 +580,8 @@ will be spawned inside renderArea -->
 
     <!-- Session/Sharing Elements -->
     <section id="awaiting-session" class="popup-menu">
-      please wait... connecting to server, creating a session...
+      <span lang="en">please wait... connecting to server, creating a session...</span>
+      <span lang="de">einen Moment, bitte... baue Verbindung auf...</span>
     </section>
     <section id="response-message" class="popup-menu">
       <span lang="en">please wait... connecting to server, creating a session...</span>
@@ -552,20 +589,19 @@ will be spawned inside renderArea -->
     </section>
     <button id="expandbutton--controls" class="button--primary" onclick="videoconf.showMenu(this,'controls')">
       <span lang="en">controls</span>
-      <span lang="de">kontrollmenü</span>
+      <span lang="de">Kontrollmenü</span>
     </button>
     <button id="start-session" class="button--primary" onclick="videoconf.createSession(); document.getElementById('timelineButton').classList.remove('minimized'); document.getElementById('speakersListButton').classList.remove('minimized');">
       <span lang="en">start session</span>
-      <span lang="de">Sitzung starten</span>
+      <span lang="de">Session an!</span>
     </button>
 
     <footer>
-
-
       <div class="imprint">
-        <p lang="de">Gratis. Open Source. Von <a href="https://agentur.pxi.gmbh">pxi&thinsp;❘&thinsp;Agentur</a> (Impressum).</p>
-        <p lang="en">Free. Open Source. By <a href="https://pixelcraft.pub">pxi&thinsp;❘&thinsp;design&thinsp;lab</a> (imprint).</p>
+        <p lang="de">Gratis. <a href="https://github.com/pxi-gmbh/compad">Open Source</a>. Von <a href="https://agentur.pxi.gmbh">pxi&thinsp;❘&thinsp;Agentur</a> (Impressum).</p>
+        <p lang="en">Free. <a href="https://github.com/pxi-gmbh/compad">Open Source</a>. By <a href="https://pixelcraft.pub">pxi&thinsp;❘&thinsp;design&thinsp;lab</a> (imprint).</p>
       </div>
+      <br>
       <button class="button--secondary" id="expandbutton--about" onclick="videoconf.showMenu(this,'about-us')">
         <span lang="en">learn more about better virtual collaboration</span>
         <span lang="de">mehr über verbesserte virtuelle Arbeit lernen</span>
