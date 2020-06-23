@@ -14,12 +14,26 @@ var rooms = {};
 var allids = [];
 var owners = {};
 var possibleRoomNames = [
-  "black","blue","yellow","green","white","purple","orange","brown",
-  "dark","light","sun","car","house","computer","wheel","sky","water",
-  "door","chair","table","bottle","ball","team",
-  "river","image",
-  "foot","hand","nose","head","ear","jacket","shirt","floor","fire",
-  "coffee","sugar","milk","laptop","keyboard","key","snow","star",
+  "black","blue","yellow","green","white","purple","orange","brown","dark","light",
+  "sun","river","cloud","snow","star","moon","hill","sky","rain","lightning","thunder",
+  "planet","orbit","mars","jupiter","venus","orion","pluto",
+  "car","wheel","bike","boat","plane","rocket","piston","axle",
+  "computer","laptop","keyboard","mouse","screen","camera","speaker",
+  "bottle","ball","doll","castle","dragon","sand","toy","bell","image",
+  "mother","child","baby","father","uncle","aunt","sister","brother","grandma",
+  "daughter","son","parent","kin",
+  "bird","dog","mouse","cat","bunny","horse","duck","frog","goose","sheep","wolf",
+  "fox","hen","raven","crane","fish","whale","shark","dolphin","octopus","snake",
+  "team","player","captain","sport",
+  "foot","hand","nose","head","ear","arm","mouth","eye","finger","toe","hair",
+  "jacket","shirt","pants","coat","hat","bag","veil","glove","scarf","shoe","tie","ribbon",
+  "fire","water","earth","air",
+  "coffee","sugar","milk","salt","pepper","tea","herb","chocolate",
+  "salad","bread","soup","carrot","butter","cheese","pizza","noodle","jam",
+  "spoon","knife","fork","plate","cup","glass","bowl","bottle",
+  "house","bed","door","chair","table","floor","attic","roof",
+  "key","stone","lock","anvil","sword","needle",
+  "paris","tokyo","berlin","ankara","athens","bangkok","cairo","sydney","dakar",
 ];
 function createRoomName(){
   let first = possibleRoomNames[Math.floor(Math.random()*possibleRoomNames.length)];

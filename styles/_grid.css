@@ -276,8 +276,8 @@ footer {
      height: 100%; /* 100% is all available space, which is all without title.
      so if we put it to % it animates nicely while container
      changes its size */
-     max-width: 80%;
-     max-height: 80%;
+     max-width: 80vmin;
+     max-height: 80vmin;
      grid-area: image;
  }
 

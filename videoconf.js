@@ -607,7 +607,7 @@ videoconf.simpleTimer={
   possibleMinutes:[1,5,10] //here we can set minutes to choose from
 };
 // show the Timer in a dialog:
-videoconf.simpleTimer.showButton = function(button){
+videoconf.simpleTimer.showButton = function(button, dontsend){
   let newb = document.createElement("div");
   newb.classList.add("fullscreenbutton");
   newb.id = "render"+button.id;
@@ -664,6 +664,12 @@ videoconf.simpleTimer.showButton = function(button){
   newb.appendChild(newwrapper);
   //start animation of fullscreenbutton:
   videoconf.moveElementAnimation(newb,button,videoconf.renderArea,null);
+  if(dontsend){
+    //dontsend means here also it comes via websocket, so we use this to add class to timer:
+    newb.classList.add("js--comes-from-other-user");
+    return;
+  }
+  ws.sendMessage({type:"simpleTimerShowButton"},"sync");
 }
 
 //adds time to the clock instead of setting the time directly
@@ -1329,6 +1335,10 @@ videoconf.recieveSync = function(msg){
   }
   if(msg.type==="simpleTimerStop"){
     this.simpleTimer.stop(true);
+  }
+  if(msg.type==="simpleTimerShowButton"){
+    let target = document.getElementById("button-simple-timer")
+    this.simpleTimer.showButton(target,true);
   }
   if(msg.type==="plenumSimpleButton"){
     this.recievePlenumSimpleButton(msg);
