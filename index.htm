@@ -34,7 +34,10 @@
           <span lang="en">help</span>
           <span lang="de">Hilfe</span>
         </button>
-
+        <button class="button--secondary" id="show-session-id" onclick="videoconf.showInviteLinks(this);">
+          <span lang="en">show session link</span>
+          <span lang="de">Session-Link zeigen</span>
+        </button>
       </div>
     </header>
     <!-- SESSION MANAGEMENT - TODO: design functionality
@@ -72,6 +75,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonA" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich möchte etwas sagen</span>
+            <span class="screenreader-only" lang="en">I'd like to contribute</span>
             <img src="iconset/need-word.svg">
           </button>
           <span class="tooltip">
@@ -83,6 +87,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonB" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich habe eine Frage</span>
+            <span class="screenreader-only" lang="en">I need clarification</span>
             <img src="iconset/need-clarification.svg">
           </button>
           <span class="tooltip">
@@ -94,6 +99,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonC" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich brauche eine Pause</span>
+            <span class="screenreader-only" lang="en">I need a break</span>
             <img src="iconset/need-break.svg">
           </button>
           <span class="tooltip">
@@ -105,6 +111,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonD" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich brauche mehr Zeit</span>
+            <span class="screenreader-only" lang="en">I need more time</span>
             <img src="iconset/need-time.svg">
           </button>
           <span class="tooltip">
@@ -116,6 +123,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonE" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich check das!</span>
+            <span class="screenreader-only" lang="en">I got this!</span>
             <img src="iconset/status-got-it.svg">
           </button>
           <span class="tooltip">
@@ -127,6 +135,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonF" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich liebe es!</span>
+            <span class="screenreader-only" lang="en">I love it</span>
             <img src="iconset/status-love-it.svg">
           </button>
           <span class="tooltip">
@@ -138,6 +147,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonG" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich bin kurz weg</span>
+            <span class="screenreader-only" lang="en">I'm away</span>
             <img src="iconset/status-away.svg">
           </button>
           <span class="tooltip">
@@ -149,6 +159,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonO" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Entschuldigung, muss mich um etwas kümmern</span>
+            <span class="screenreader-only" lang="en">sorry, got to take care of something</span>
             <img src="iconset/status-sorry-preoccupied.svg">
           </button>
           <span class="tooltip">
@@ -160,6 +171,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonP" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Es kommt kein Ton an</span>
+            <span class="screenreader-only" lang="en">I can't hear you</span>
             <img src="iconset/call-no-sound.svg">
           </button>
           <span class="tooltip">
@@ -171,6 +183,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonQ" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Du bist eingefroren</span>
+            <span class="screenreader-only" lang="en">you appear frozen</span>
             <img src="iconset/call-frozen.svg">
           </button>
           <span class="tooltip">
@@ -182,6 +195,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonR" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Du brichst ab</span>
+            <span class="screenreader-only" lang="en">you are breaking up</span>
             <img src="iconset/call-breaking-up.svg">
           </button>
           <span class="tooltip">
@@ -193,6 +207,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonS" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Es gibt Störgeräusche</span>
+            <span class="screenreader-only" lang="en">there is background noise</span>
             <img src="iconset/call-noise.svg">
           </button>
           <span class="tooltip">
@@ -204,6 +219,7 @@ will be spawned inside renderArea -->
         <li class="session--off">
           <button id="buttonT" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Du bist mir zu leise</span>
+            <span class="screenreader-only" lang="en">speak up please</span>
             <img src="iconset/call-louder.svg">
           </button>
           <span class="tooltip">
@@ -217,6 +233,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonH" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich möchte etwas sagen</span>
+            <span class="screenreader-only" lang="en">I'd like to contribute</span>
             <img src="iconset/need-word.svg">
           </button>
           <span class="tooltip">
@@ -227,7 +244,8 @@ will be spawned inside renderArea -->
 
         <li class="session--on">
           <button id="buttonI" class="display-button" onclick="videoconf.showButton(this)">
-            <span class="screenreader-only" lang="de">Ich habe eine Frage</span>
+            <span class="screenreader-only" lang="de">Ich habe eine Verständnis-Frage</span>
+            <span class="screenreader-only" lang="en">I need clarification</span>
             <img src="iconset/need-clarification.svg">
           </button>
           <span class="tooltip">
@@ -239,6 +257,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonJ" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich brauche eine Pause</span>
+            <span class="screenreader-only" lang="en">I need a break</span>
             <img src="iconset/need-break.svg">
           </button>
           <span class="tooltip">
@@ -250,6 +269,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonK" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich brauche mehr Zeit</span>
+            <span class="screenreader-only" lang="en">I need more time</span>
             <img src="iconset/need-time.svg">
           </button>
           <span class="tooltip">
@@ -261,6 +281,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonL" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich check das!</span>
+            <span class="screenreader-only" lang="en">I got this!</span>
             <img src="iconset/status-got-it.svg">
           </button>
           <span class="tooltip">
@@ -272,6 +293,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonM" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Ich liebe es!</span>
+            <span class="screenreader-only" lang="en">I love it</span>
             <img src="iconset/status-love-it.svg">
           </button>
           <span class="tooltip">
@@ -282,7 +304,8 @@ will be spawned inside renderArea -->
 
         <li class="session--on">
           <button id="buttonN" class="display-button" onclick="videoconf.showButton(this)">
-            <span class="screenreader-only" lang="de">Ich bin kurz weg</span>
+            <span class="screenreader-only" lang="de">Ich bin abwesend</span>
+            <span class="screenreader-only" lang="en">I'm away</span>
             <img src="iconset/status-away.svg">
           </button>
           <span class="tooltip">
@@ -294,6 +317,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonU" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Entschuldigung, muss mich um etwas kümmern</span>
+            <span class="screenreader-only" lang="en">sorry, got to take care of something</span>
             <img src="iconset/status-sorry-preoccupied.svg">
           </button>
           <span class="tooltip">
@@ -305,6 +329,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonV" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Es kommt kein Ton an</span>
+            <span class="screenreader-only" lang="en">I can't hear you</span>
             <img src="iconset/call-no-sound.svg">
           </button>
           <span class="tooltip">
@@ -316,6 +341,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonW" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Du bist eingefroren</span>
+            <span class="screenreader-only" lang="en">you appear frozen</span>
             <img src="iconset/call-frozen.svg">
           </button>
           <span class="tooltip">
@@ -327,6 +353,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonX" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Du brichst ab</span>
+            <span class="screenreader-only" lang="en">you are breaking up</span>
             <img src="iconset/call-breaking-up.svg">
           </button>
           <span class="tooltip">
@@ -338,6 +365,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonY" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Es gibt Störgeräusche</span>
+            <span class="screenreader-only" lang="en">there is background noise</span>
             <img src="iconset/call-noise.svg">
           </button>
           <span class="tooltip">
@@ -349,6 +377,7 @@ will be spawned inside renderArea -->
         <li class="session--on">
           <button id="buttonZ" class="display-button" onclick="videoconf.showButton(this)">
             <span class="screenreader-only" lang="de">Du bist mir zu leise</span>
+            <span class="screenreader-only" lang="en">speak up please</span>
             <img src="iconset/call-louder.svg">
           </button>
           <span class="tooltip">
@@ -449,7 +478,7 @@ will be spawned inside renderArea -->
     <section id="about-us" class="popup-menu">
       <div lang="de">
         <h3>Besser virtuell arbeiten</h3>
-        <p><i>compad</i> entwickeln wir, weil wir es brauchen: Vor der Krise haben wir Premium-Workshops zu Strategie-Findung und Gestaltung angeboten. Die mussten wir nun für den virtuellen Einsatz adaptieren.</p>
+        <p><i>compad</i> entwickeln wir, weil wir es brauchen: Vor der Krise haben wir aufwändig gestaltete Workshops zu Strategie-Findung und Gestaltung angeboten. Die mussten wir nun für den virtuellen Einsatz adaptieren.</p>
         <p>Wir veröffentlichen unsere Erfahrungen als vernetzt arbeitende, kleine Agentur in einem <a href="https://leitfaden-fernarbeit.de">Leitfaden</a>. Außerdem bieten wir Beratung und Gestaltungs-Lösungen an. Sollen wir mal zeigen, wie schick und hilfreich dabei virtuelle Workshops aussehen können?</p>
         <form id="cta-form--de" action="https://mail.pxi.gmbh/sendy/subscribe" method="POST" accept-charset="utf-8">
           <div>
@@ -502,17 +531,20 @@ will be spawned inside renderArea -->
     <section id="documentation-menu" class="popup-menu">
       <section lang="de">
         <h2>Dokumentation</h2>
-        <p><i>compad</i> ist in der frühen Entwicklung - da kommt noch was.</p>
-        <p>Diese Version stellt die Basis-Funktionen und Signale vor. Damit können Menschen parallel zur Video-Konferenz visuell kommunizieren.</p>
+        <p><i>compad</i> ist in der frühen Entwicklung. Etwas Geduld bitte!</p>
+        <p>Diese Version stellt erste Basis-Funktionen und Signale vor. Damit können Menschen parallel zur Video-Konferenz visuell kommunizieren.</p>
         <ul>
           <li>Auf mobilen Geräten Feedback und Information über die Webcam anzeigen: Signal auswählen, Bild in die Kamera halten. Eventuell Bildschirm-Helligkeit reduzieren.</li>
-          <li>Damit Information zwischen Geräten synchronisiert, eine <em>Session</em> starten: Wir spielen damit die visuellen Signale über eine virtuelle Webcam in Video-Konferenzen live ein.</li>
+          <li>Damit Information zwischen Geräten synchronisiert, eine <em>Session</em> starten: Wir spielen damit die visuellen Signale in Video-Konferenzen live ein.</li>
         </ul>
         <p>Kostenlos. Weil wir alle bessere Konferenzen brauchen können. Unterstützung ist sehr willkommen:</p>
-        <p style="text-align:center;"><a href="https://gum.co/YbRDN"><strong>Erweitertes Icon-Set, Design-Konzept und Anleitung kaufen.</strong> 5€ via Gumroad.</a></p>
-        <p style="text-align:center;"><a href="https://github.com/pxi-gmbh/compad/issues">Fehler, Wünsche und Ideen gemeinsam bei GitHub sammeln.</a></p>
-        </ul>
-        <hr>
+        <div style="background-color:var(--color-shadow);border-radius:.2em; padding:2em;">
+          <p style="text-align:center;" class="button--secondary"><a style="text-decoration:none;" href="https://gum.co/YbRDN"><strong>Erweitertes Icon-Set & Anleitung: 5€</strong></a></p>
+          <br>
+          <p style="text-align:center;" class="button--secondary"><a style="text-decoration:none;" href="https://github.com/pxi-gmbh/compad/issues">Fehler & Wünsche bei GitHub sammeln</a></p>
+        </div>
+        <br>
+        <h2>Kurz-Übersicht: Signale</h2>
         <h3>Teilen: Status</h3>
         <p>Wir haben den Symbolen und Botschaften Mehrdeutigkeit mitgegeben. Der Kontext soll prägen können, was ein Signal bedeutet.</p>
 
@@ -524,24 +556,30 @@ will be spawned inside renderArea -->
 
         <h3>Interaktion: Nachricht & Timer</h3>
         <p>Es gibt ein Textfeld, um eigene Kurz-Nachrichten zu formulieren. Die Größe ist begrenzt, damit der Inhalt lesbar bleibt, wenn er über eine Webcam geteilt wird.</p>
-        <p>Es gibt einen Timer, der schnelle Zeitmessung wie eine Eieruhr erlaubt. Das ist besonders nützlich für geteilte Zeit-Begrenzungen, wenn die Anzeige in ein laufendes Video-Signal mit virtuellen Webcams übernommen wird.</p>
-
-        <h4>Wie funktionieren geteilte <em>Sessions</em>?</h4>
+        <p>Es gibt einen Timer, der schnelle Zeitmessung wie eine Eieruhr erlaubt. Das ist besonders nützlich für geteilte Zeit-Begrenzungen, wenn die Anzeige in ein laufendes Video-Signal übernommen wird.</p>
+        <br>
+        <h2>Wie funktionieren geteilte <em>Sessions</em>?</h2>
         <p>Beim Start einer Session wird eine Verbindung zum Server hergestellt. Der erzeugt eine zufällige URL. Über den entsprechenden Link können weitere Leute in die laufende Session eingeladen werden. Dort werden alle Interaktionen live synchronisiert.</p>
-        <p>Beim Eintritt in eine laufende Session über eine URL stellt unser Server die Verbindung zu den anderen Menschen her, die sich unter dieser URL treffen und Interaktionen austauschen.</p>
+        <p>Beim Eintritt in eine laufende Session über eine URL stellt unser Server die Verbindung zu anderen Clients unter dieser URL her.</p>
+        <p>Tipp: Zum Einbinden in OBS oder mit Bildschirm-Teilen für alle Teilnehmenden einzelne Sessions anlegen. Dazu jeweils ein Browser-Fenster anlegen und alle Fenster arrangieren.</p>
+        <p>Für die Aufnahme <code>.tooltip {display:none;}</code> setzen.</p>
       </section>
       <section lang="en">
         <h2>Documentation</h2>
-        <p><i>compad</i> is still only in version 0.1 - please bear with us.</p>
+        <p><i>compad</i> is in early development - please bear with us.</p>
         <p>The first milestone establishes a set of signals that people can use to communicate visually on a second screen during video conferences.</p>
         <ul>
           <li>Use the app on your mobile device to create visual feedback that you can convey via your webcam. Just hold the phone up to the camera and dim the screen a bit.</li>
-          <li>Use the app in a shared session to sync all interactions from client devices to your device. We use this feature to route visual input into the video feed of the web conference via a virtual webcam.</li>
+          <li>Use the app in a shared session to sync all interactions from client devices to your device. We use this feature to route visual input into the video feed of the web conference.</li>
         </ul>
         <p>Free. Because we all can use better virtual experiences right now. You can support development:</p>
-        <p style="text-align:center;"><a href="https://gum.co/YbRDN"><strong>Buy our expanded icon set, design concept and usage guide</strong>. 5€ via Gumroad.</a></p>
-        <p style="text-align:center;"><a href="https://github.com/pxi-gmbh/compad/issues">Track issues, feature requests and ideas on GitHub.</a></p>
-        <hr>
+        <div style="background-color:var(--color-shadow);border-radius:.2em; padding:2em;">
+          <p class="button--secondary" style="text-align:center;"><a style="text-decoration:none;" href="https://gum.co/YbRDN"><strong>expanded icon set & guide: 5€</strong></a></p>
+          <br>
+          <p class="button--secondary" style="text-align:center;"><a style="text-decoration:none;" href="https://github.com/pxi-gmbh/compad/issues">Track issues, feature requests and ideas on GitHub.</a></p>
+        </div>
+        <br>
+        <h2>Signals</h2>
         <h3>Share: Status</h3>
         <p>We've imbued some ambiguity on purpose: context should determine meaning.</p>
 
@@ -552,12 +590,15 @@ will be spawned inside renderArea -->
         <p>We designed the signals to make no assumptions about where a problem originates. The aggregate of experiences usually narrows the source of the problem down quickly: is it an issue for everyone or just me?</p>
 
         <h3>Interactions: Message & Time</h3>
-        <p>You will find a text area in which to share messages of your own. This is intentionally limited in size so text remains readably when shared on a webcam.</p>
-        <p>You will also find a basic timer to quickly start and share time limits. This is useful for timeboxing, expecially when routed back into the video signal via virtual webcam.</p>
+        <p>You will find a text area in which to share messages of your own. This is intentionally limited in size so text remains readable when shared on a webcam.</p>
+        <p>You will also find a basic timer to quickly start and share time limits. This is useful for timeboxing, expecially when routed back into the video signal.</p>
 
-        <h4>How shared sessions work</h4>
+        <br>
+        <h2>How shared sessions work</h2>
         <p>When you start a session, you establish a link to our server, giving you a specific URL, unique to you. Share this URL only with people you want to be able to interact with your session. All actions sync.</p>
         <p>When you join a session through a unique URL, our server connects you to a shared space created at this URL.</p>
+        <p>Tipp: assign a unique ID to each attendee. Gather each user signals in a different browser window and arrange these windows for capturing via screen-share or OBS to coordinate a meeting.</p>
+        <p>Set <code>.tooltip {display:none}</code> when capturing the signals.</p>
 <!-- TODO translate/adapt graphics and text from teletype.atom.io for our explanation -->
       </section>
     </section>

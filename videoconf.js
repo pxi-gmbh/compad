@@ -92,37 +92,19 @@ videoconf.createButtonHeader = function(buttonOptions){
   console.log(tag);
 }
 
-/*helper function to create and style a simple Plenum Button*/
-videoconf.createSimpleButton = function(options){
-  wraping = options.wrapper || "li";
-  let wrapper = document.createElement(wraping);
-  if(options.className)li.className=options.className;
-  let html = `<button id="${options.id}" class="display-button" onclick="${options.onclick}">
-  <img src="${options.src}">
-</button>
-<span class="tooltip">
-  <span lang="de">${options.de}</span>
-   <span lang="en">${options.en}</span>
-</span>`;
-  wrapper.innerHTML=html;
-  return wrapper;
-}
-
+/*initial call - initialises videoconf*/
 videoconf.init = function(){
   this.renderArea = document.getElementById("renderArea");
 
-  let timerminutes = document.getElementById("timerminutes");
-  let timerseconds = document.getElementById("timerseconds");
-
   if(location.search!=""){
-    this.room = location.search.substring(1);
+    //comes via invite-link, so join a session
+    this.room = location.search.substring(1); //simple format in ?roomname in invite-link
     let ivlink = document.getElementById("showInviteLinks");
-    if(ivlink)ivlink.parentElement.removeChild(ivlink);
+    if(ivlink)ivlink.parentElement.removeChild(ivlink); //delete invite-link-button
     let startlink = document.getElementById("start-session");
-    if(startlink)startlink.parentElement.removeChild(startlink);
-    document.body.classList.add("guest");
-
-  setTimeout("videoconf.startConf();",500);
+    if(startlink)startlink.parentElement.removeChild(startlink); //delete start-session-button
+    document.body.classList.add("guest"); //add css-state guest to body
+  setTimeout("videoconf.startConf();",500); //after initialising join conference
   }
   window.addEventListener("keyup",function(e){
     if(e.key==="Escape"){
@@ -130,6 +112,7 @@ videoconf.init = function(){
       if(closebutton.length>0)closebutton[closebutton.length-1].click();
     }
   });
+  //history-hack to prevent leaving on back - does not work on all browsers
   let acthash = location.hash;
   document.location.hash="historyhack";
   //setTimeout('document.location.hash="";',10);
@@ -194,6 +177,11 @@ videoconf.initPlenum = function(){
 
     }
   }
+  let chatinput = document.getElementById("chatinput");
+  chatinput.onkeypress = function(e){
+    if(e.key==="Enter")videoconf.chat(this.value);
+  }
+
 
 }
 
@@ -870,8 +858,9 @@ videoconf.addPlenumUserList = function(dontsend){
 }
 
 //let there be a chat:
-videoconf.chat = function(){
-  let text = document.getElementById("chat").value;
+videoconf.chat = function(chattext){
+  let text = chattext;
+  if(text===undefined)text = document.getElementById("chatinput").value;
   let time = new Date();
   let timestring = time.getHours()+":";
   if(time.getMinutes()<10)timestring+=0;
@@ -887,7 +876,7 @@ videoconf.chat = function(){
   };
   ws.sendMessage(data,"chat");
   this.writeChat(data);
-  document.getElementById("chat").value="";
+  document.getElementById("chatinput").value="";
 }
 //recieving chat-message via WebSocket
 videoconf.recieveChat = function(data){
@@ -1273,6 +1262,124 @@ videoconf.moveSpeakersListEntry = function(nr, dontsend){
   ws.sendMessage({type:"moveSpeakersListEntry",nr:nr},"sync");
 }
 
+/*topic-list: used by plenum
+createTopicList: creates a new topiclist
+removeTopicList: removes the topiclist
+
+*/
+videoconf.createTopicList = function(dontsend){
+  this.topicList = {};
+  let oldTopicList = document.getElementById("topicList");
+  if(oldTopicList)oldTopicList.parentElement.removeChild(oldTopicList);
+  this.topicList.list = new Array();
+  let wrapper = document.createElement("div");
+  wrapper.id="topicList";
+  let title = videoconf.createButtonHeader({
+      titleDe:"Tops",
+      titleEn:"topics",
+      closeButton:(ws.isCreator||dontsend!=true),
+      onCloseButton:function(){videoconf.removeTopicList();},
+      expandButton:true,
+    });
+    wrapper.appendChild(title);
+    let actualTop = document.createElement("div");
+    actualTop.classList.add("topicList--actual-top");
+    actualTop.innerHTML = `
+    <span class="screenreader-only">
+    <span lang="de">aktuelles Top:</span>
+    <span lang="en">current topic:</span>
+    </span>
+    <span id="topicListTop"></span>
+    `;
+    wrapper.appendChild(actualTop);
+    let ul = document.createElement("ul");
+    ul.id="topicList--all-tops";
+    wrapper.appendChild(ul);
+    let inp = document.createElement("input");
+    inp.type="text";
+    inp.classList.add("topicList--input");
+    inp.placeholder="+++";
+    inp.onkeypress = function(e){
+      if(e.key==="Enter"){
+        videoconf.addTopicListEntry(this.value);
+        e.preventDefault();
+        this.value="";
+      }
+    }
+    wrapper.appendChild(inp);
+    this.renderArea.appendChild(wrapper);
+    if(dontsend===true)return;
+    ws.sendMessage({type:"createTopicList"},"sync");
+}
+
+videoconf.removeTopicList = function(dontsend){
+  let tl = document.getElementById("topicList");
+  tl.parentElement.removeChild(tl);
+  this.topicList = undefined;
+  if(dontsend===true)return;
+  ws.sendMessage({type:"removeTopicList"},"sync");
+}
+
+videoconf.addTopicListEntry = function(toptext, dontsend){
+  this.topicList.list.push({toptext});
+  this.writeTopicListEntrys();
+  if(dontsend===true)return;
+  ws.sendMessage({type:"addTopicListEntry",top:toptext},"sync");
+}
+
+videoconf.removeTopicListEntry = function(nr, dontsend){
+  let list = this.topicList.list;
+  list.splice(nr,1);
+  this.writeTopicListEntrys();
+  if(dontsend===true)return;
+  ws.sendMessage({type:"removeTopicListEntry",nr:nr},"sync");
+}
+
+videoconf.selectTopicListEntry = function(nr,dontsend){
+  this.topicList.actualTopic = nr;
+  this.writeTopicListEntrys();
+  if(dontsend===true)return;
+  ws.sendMessage({type:"selectTopicListEntry",nr:nr},"sync");
+}
+
+videoconf.writeTopicListEntrys = function(){
+  let list = this.topicList.list;
+  let actnr = this.topicList.actualTopic || 0;
+  let ul = document.getElementById("topicList--all-tops");
+  if(ul===null)return;
+  ul.innerHTML=""; //reset ul
+  for(var x=0;x<list.length;x++){
+    let li = document.createElement("li");
+    let top = document.createElement("button");
+    if(x===actnr)top.classList.add("actualTopic");
+    top.name=x;
+    //if(ws.server===null||ws.isCreator)
+    top.onclick=function(){
+      videoconf.selectTopicListEntry(this.name);
+    }
+    top.innerText = list[x].toptext;
+    li.appendChild(top);
+    let delbutton = document.createElement("button");
+    delbutton.classList.add("delete-button");
+    delbutton.name = x;
+    delbutton.onclick = function(){videoconf.removeTopicListEntry(this.name)};
+    delbutton.innerHTML = `
+    <span class="screenreader-only">
+    <span lang="de">top löschen</span>
+    <span lang="en">delete top</span>
+    </span>
+    <span>x</span>
+    `;
+    if(ws.server===null || ws.isCreator)li.appendChild(delbutton);
+    ul.appendChild(li);
+  }
+  //set act-topic:
+  let acttop = document.getElementById("topicListTop");
+  if(actnr<this.topicList.list.length)acttop.innerText=this.topicList.list[actnr].toptext;
+}
+
+
+
 /*getting sync-message via websocket -
 here we distinguish which functions are to be called */
 videoconf.recieveSync = function(msg){
@@ -1346,6 +1453,22 @@ videoconf.recieveSync = function(msg){
   if(msg.type==="addPlenumUserList"){
     this.addPlenumUserList(true);
   }
+  if(msg.type==="createTopicList"){
+    this.createTopicList(true);
+  }
+  if(msg.type==="removeTopicList"){
+    this.removeTopicList(true);
+  }
+  if(msg.type==="addTopicListEntry"){
+    this.addTopicListEntry(msg.top,true);
+  }
+  if(msg.type==="removeTopicListEntry"){
+    this.removeTopicListEntry(msg.nr,true);
+  }
+  if(msg.type==="selectTopicListEntry"){
+    this.selectTopicListEntry(msg.nr,true);
+  }
+
 }
 
 /*askCurrentState: a user enters the room and asked this
@@ -1358,9 +1481,10 @@ videoconf.askCurrentState = function(id){
     actbutton:this.actbutton,
     timeline:this.timeline,
     speakersList:this.speakersList,
-    roomlist:this.roomlist,
+    //roomlist:this.roomlist, wrong: roomlist comes by login - here it can be old state
     hasRoomList:this.hasRoomList,
-    plenumButtonList:this.plenumButtonList
+    plenumButtonList:this.plenumButtonList,
+    topicList:this.topicList,
   };
   let tf = document.getElementById("textfieldWriteArea");
   if(tf)answer.textfield=tf.innerText;
@@ -1400,8 +1524,7 @@ videoconf.recieveCurrentState = function(data){
     this.simpleTimer.actTime = data.simpleTimer.actTime;
     this.simpleTimer.cycleTimer();
   }
-  if(data.roomlist && data.hasRoomList){
-    this.roomlist = data.roomlist;
+  if(data.hasRoomList){
     this.addPlenumUserList();
   }
   if(data.plenumButtonList){
@@ -1410,23 +1533,36 @@ videoconf.recieveCurrentState = function(data){
       this.recievePlenumSimpleButton(data.plenumButtonList[x]);
     }
   }
+  if(data.topicList){
+    this.createTopicList(true);
+    this.topicList = data.topicList;
+    this.writeTopicListEntrys();
+  }
+  //as we are up to date check if user has set username yet. if not set it for him:
+  if(ws.username===undefined)this.setUserName("guest"+ws.id);
 }
 /*
 showInviteLinks: shows a dialog with the current session-ID
 */
-videoconf.showInviteLinks = function(){
-  let link = location.origin+"?"+this.room;
-  document.getElementById("session-ID").innerText=link;
-  let respmenu = document.getElementById("response-message");
-  let actmenu = document.getElementById("js--controlWrapper-Menu");
-  let invmenu = document.getElementById("invite-link-menu");
+videoconf.showInviteLinks = function(button){
+  let link = location.origin+"?"+this.room; //create the link
+  document.getElementById("session-ID").innerText=link; //element to put id in
+  let respmenu = document.getElementById("response-message"); // response-menu
+  let actmenu = document.getElementById("js--controlWrapper-Menu"); // active-menu if any
+  let invmenu = document.getElementById("invite-link-menu"); //menu with invite-link
 
   if(actmenu && actmenu.contains(respmenu)){
-    document.body.appendChild(respmenu);
-    actmenu.appendChild(invmenu);
+    //the response-message-menu is open
+    //instead of animating we switch content directly
+    document.body.appendChild(respmenu); //save old responsemenu by moving it to body
+    actmenu.appendChild(invmenu); //insert invite-link-menu into act-menu without animation
   }else{
-    let target = document.getElementById("expandbutton--controls");
-    if(target===null)target = document.getElementById("showInviteLinks");
+    // search for target for animation:
+    let target = button; //would be "this" by calling for example
+    if(target===null)target = document.getElementById("show-session-id");
+    if(target===null)target = document.getElementById("expandbutton--controls"); // put target to button of controls-menu
+    if(target===null)target = document.getElementById("showInviteLinks"); // plenum has invitelink always visible so use it directly
+    //target should be set so open the menu with target-button
     if(target)this.showMenu(target,"invite-link-menu");
   }
   //alert(link);
@@ -1451,6 +1587,7 @@ videoconf.setUserName = function(newname){
   ws.username=newname;
   ws.sendMessage(newname,"setUserName");
   document.getElementById("localusername").innerText=newname;
+  document.getElementById("localusernameEditable").innerText=newname;
 
 }
 
@@ -1507,6 +1644,7 @@ ws.init2 = async function(){
               localStorage.setItem("videoconftools",JSON.stringify({username:ws.username,room:ws.room,id:ws.id}));
               ws.sendMessage(ws.room,"joinRoom");
               videoconf.showInviteLinks();
+              if(ws.username===undefined)videoconf.setUserName("creator");
               let ivbutton = document.getElementById("showInviteLinks");
               ivbutton.innerText = "invite people";
               ivbutton.classList.add("invite");

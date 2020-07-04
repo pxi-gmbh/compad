@@ -80,6 +80,9 @@ footer {
 .state--before-session footer .imprint /* TODO legacy name */{
   display: inline-block;
 }
+.state--before-session #show-session-id {
+  display: none;
+}
 
 /* STAGE FOR FULLSCREEN */
 #stage-front,

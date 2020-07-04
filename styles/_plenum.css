@@ -250,7 +250,6 @@ button.toggle-button {
     grid-template-columns: repeat(auto-fit,minmax(10ch,1fr));
     grid-template-rows: auto;
     padding: 0;
-    overflow: auto;
 }
 .mode--plenum #controls button{
   height:100%;
@@ -282,10 +281,7 @@ body.mode--plenum {
 .mode--plenum.guest #controls{
   display: none;
 }
-.mode--plenum #localuser{
-  grid-area:"localuser";
-  display:block;
-}
+
 
 .mode--plenum #plenumtimer {
     display: inline-grid;
@@ -461,8 +457,10 @@ body.mode--plenum {
 }
 
 .mode--plenum #localuser{
-  display: block;
-  grid-area: localuser;
+  display: grid;
+  grid-template-columns: 20ch 30ch 1fr;
+  grid-template-areas:
+      "name chat expand";
 }
 
 .mode--plenum #localuser.editable #localusername,
@@ -476,6 +474,14 @@ body.mode--plenum {
   background:white;
   color:black;
 }
+
+input#chatinput {
+    margin: 0;
+    padding: 0;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
 
 .mode--plenum .msg-active{ display:none;}
 .mode--plenum .display-button.active .msg-active{
